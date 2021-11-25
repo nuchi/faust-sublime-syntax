@@ -1,0 +1,349 @@
+NAME = 'Faust'
+EXTENSIONS = 'dsp lib'
+
+
+prototype : (~(line-comment | block-comment))* ;
+line-comment{comment.line} :
+  `//`{punctuation.definition.comment} ~'$\n?' ;
+block-comment{comment.block} :
+  `/*`{punctuation.definition.comment} ~`*/`{punctuation.definition.comment} ;
+
+main : (variant-list statement)* ;
+
+deflist : (variant-list definition)* ;
+
+variant-list : variant* ;
+
+variant
+     : `singleprecision`{storage.modifier}
+     | `doubleprecision`{storage.modifier}
+     | `quadprecision`{storage.modifier}
+     | `fixedpointprecision`{storage.modifier}
+     ;
+
+NUM = '\d*(\.|\d)\d*(e[-+]?\d+)?f?'
+
+statement
+     : IMPORT{keyword.control.import} import-arg-list ENDDEF
+     | DECLARE{keyword.control.declare}
+       (
+          IDENT{meta.declare.key entity.name}
+        | IDENT{meta.declare.function variable.function} IDENT{meta.declare.key entity.name}
+       ) decl-string ENDDEF
+     | definition
+     | docs
+     ;
+
+docs{meta.documentation} : '(?=<mdoc>)'%embed['(?<=\<\/mdoc\>)']{scope:text.xml} ;
+
+IMPORT = '\bimport\b'
+DECLARE = '\bdeclare\b'
+ENDDEF = `;`
+IDENT = '_?[a-zA-Z][_a-zA-Z0-9]*'
+decl-string{meta.declare.value} : string ;
+string{string.quoted, include-prototype: false}:
+  `"`{punctuation.definition.string.begin}
+  (~'\\.'{constant.character.escape})*
+  ~`"`{punctuation.definition.string.end} ;
+
+import-arg-list{meta.import.arguments} : LPAREN{punctuation.section.group.begin} string RPAREN{punctuation.section.group.end};
+LPAREN = `(`
+RPAREN = `)`
+
+definition : defname
+             paramlist?
+             EQUAL{keyword.operator.assignment}
+             typical-expression
+             ENDDEF ;
+defname : IDENT{entity.name.function, sort: 1} | '\bprocess\b'{entity.name.function variable.language};
+paramlist{meta.function.parameters} : arg-param-list['variable.parameter', 'variable.parameter'] ;
+EQUAL = `=`
+typical-expression : expression['meta.generic-name', 'variable.function'];
+typical-argument : argument['meta.generic-name', 'variable.function'];
+
+
+
+lambda-defn{meta.function.lambda} : lambda-params DOT paren-expr['meta.generic-name', 'variable.function'];
+lambda-params{meta.function.lambda.parameters}
+  : paramlist
+  ;
+
+# s: scope for bare IDENT, t: scope for IDENT with arglist
+expression[s, t] : expression-1[s, t] (
+  (
+      SPLIT{keyword.operator}
+    | MIX{keyword.operator}
+    | SEQ{keyword.operator}
+    | PAR{keyword.operator}
+    | REC{keyword.operator}
+  ) expression-1[s, t])* ;
+
+expression-1[s, t] : infixexp[s, t] (
+    WITH{keyword.operator.with} with-body
+  | LETREC{keyword.operator.letrec} letrec-body
+  )* ;
+
+
+SPLIT = `<:`
+MIX = `:>`
+SEQ = ':(?!>)(?<!<)'
+PAR = `,`
+REC = `~`
+
+with-body{meta.block.with} :
+  LBRAQ{punctuation.section.block.begin}
+  deflist
+  RBRAQ{punctuation.section.block.end} ;
+WITH = '\bwith\b'
+letrec-body{meta.block.letrec} :
+  LBRAQ{punctuation.section.block.begin}
+  recinition*
+  RBRAQ{punctuation.section.block.end} ;
+recinition : recname EQUAL{keyword.operator.assignment} typical-expression ENDDEF;
+recname : `'`{entity.name} IDENT{entity.name};
+
+LETREC = '\bletrec\b'
+LBRAQ = `{`
+RBRAQ = `}`
+
+infixexp[s, t] : infixexp-1[s, t] ((
+                                LT{keyword.operator}
+                              | LE{keyword.operator}
+                              | EQ{keyword.operator}
+                              | GT{keyword.operator}
+                              | GE{keyword.operator}
+                              | NE{keyword.operator}
+                              | ADD{keyword.operator}
+                              | SUB{keyword.operator}
+                              | OR{keyword.operator}
+                              | MUL{keyword.operator}
+                              | DIV{keyword.operator}
+                              | MOD{keyword.operator}
+                              | AND{keyword.operator}
+                              | XOR{keyword.operator.word}
+                              | LSH{keyword.operator}
+                              | RSH{keyword.operator}
+                              | POWOP{keyword.operator}
+                              | FDELAY{keyword.operator}
+                             ) infixexp-1[s, t])*;
+infixexp-1[s, t] : primitive[s, t] (
+    DELAY
+  | DOT{punctuation.accessor.dot} name-or-func-call[s, t]
+  | arglist
+)* ;
+
+name-or-func-call[s, t] : IDENT{#[t]} arglist | IDENT{#[s]};
+
+
+arglist{meta.function-call.arguments} : arg-param-list['meta.generic-name', 'variable.function'] ;
+arg-param-list[s, t]{meta.function-call.arguments} : LPAREN{punctuation.section.arguments.begin}
+                                                     argument[s, t] (`,` argument[s, t])*
+                                                     RPAREN{punctuation.section.arguments.end}
+                                      ;
+argument[s, t] : infixexp[s, t] ((SPLIT{keyword.operator}
+                                  | MIX{keyword.operator}
+                                  | SEQ{keyword.operator}
+                                  | REC{keyword.operator}
+                                  ) infixexp[s, t])* ;
+LT = `<`
+LE = `<=`
+EQ = `==`
+GT = `>`
+GE = `>=`
+NE = `!=`
+ADD = `+`
+SUB = `-`
+OR = `|`
+MUL = `*`
+DIV = `/`
+MOD = `%`
+AND = `&`
+XOR = '\bxor\b'
+LSH = `<<`
+RSH = `>>`
+POWOP = `^`
+FDELAY = `@`
+DELAY = `'`
+DOT = `.`
+croc-deflist : `[` deflist `]` ;
+
+primitive[s, t]  : (
+                     ADD{constant.numeric} | SUB{constant.numeric}
+                    )?  NUM{constant.numeric}
+                 | `_`                           {constant.language}
+                 | `!`                           {constant.language}
+                 | '\bmem\b'                     {support.function.builtin}
+                 | '\bprefix\b'                  {support.function.builtin}
+                 | type
+                 | ADD                           {keyword.operator}
+                 | SUB                           {keyword.operator}
+                 | MUL                           {keyword.operator}
+                 | DIV                           {keyword.operator}
+                 | MOD                           {keyword.operator}
+                 | FDELAY                        {keyword.operator}
+                 | AND                           {keyword.operator}
+                 | OR                            {keyword.operator}
+                 | XOR                           {keyword.operator}
+                 | LSH                           {keyword.operator, sort: -1}
+                 | RSH                           {keyword.operator, sort: -1}
+                 | LT                            {keyword.operator}
+                 | LE                            {keyword.operator, sort: -1}
+                 | GT                            {keyword.operator}
+                 | GE                            {keyword.operator, sort: -1}
+                 | EQ                            {keyword.operator, sort: -1}
+                 | NE                            {keyword.operator, sort: -1}
+                 | '\battach\b'                  {support.function.builtin}
+                 | '\benable\b'                  {support.function.builtin}
+                 | '\bcontrol\b'                 {support.function.builtin}
+                 | '\bacos\b'                    {support.function.builtin}
+                 | '\basin\b'                    {support.function.builtin}
+                 | '\batan\b'                    {support.function.builtin}
+                 | '\batan2\b'                   {support.function.builtin}
+                 | '\bcos\b'                     {support.function.builtin}
+                 | '\bsin\b'                     {support.function.builtin}
+                 | '\btan\b'                     {support.function.builtin}
+                 | '\bexp\b'                     {support.function.builtin}
+                 | '\blog\b'                     {support.function.builtin}
+                 | '\blog10\b'                   {support.function.builtin}
+                 | POWOP                         {support.function.builtin}
+                 | '\bpow\b'                     {support.function.builtin}
+                 | '\bsqrt\b'                    {support.function.builtin}
+                 | '\babs\b'                     {support.function.builtin}
+                 | '\bmin\b'                     {support.function.builtin}
+                 | '\bmax\b'                     {support.function.builtin}
+                 | '\bfmod\b'                    {support.function.builtin}
+                 | '\bremainder\b'               {support.function.builtin}
+                 | '\bfloor\b'                   {support.function.builtin}
+                 | '\bceil\b'                    {support.function.builtin}
+                 | '\brint\b'                    {support.function.builtin}
+                 | '\brdtable\b'                 {support.function.builtin}
+                 | '\brwtable\b'                 {support.function.builtin}
+                 | '\bselect2\b'                 {support.function.builtin}
+                 | '\bselect3\b'                 {support.function.builtin}
+                 | '\bassertbounds\b'            {support.function.builtin}
+                 | '\blowest\b'                  {support.function.builtin}
+                 | '\bhighest\b'                 {support.function.builtin}
+                 | SUB{constant.numeric}? name-or-func-call[s, t]
+                 | paren-expr[s, t]
+                 | `\`{keyword.operator} lambda-defn
+                 | '\bcase\b'{keyword.control.case} case-body
+                 | '\bffunction\b'{support.function.builtin} ffunction-body
+                 | '\bfconstant\b'{support.function.builtin} f-other-body
+                 | '\bfvariable\b'{support.function.builtin} f-other-body
+                 | '\bcomponent\b'{support.function.builtin} component-body
+                 | '\blibrary\b'{support.function.builtin} library-body
+                 | '\benvironment\b'{keyword.control} environment-body
+                 | '\bwaveform\b'{support.type} waveform-body
+                 | route[s, t]
+                 | '\bbutton\b'{support.function.builtin}    ui-args-0
+                 | '\bcheckbox\b'{support.function.builtin}  ui-args-0
+                 | '\bvslider\b'{support.function.builtin}   ui-args-4
+                 | '\bhslider\b'{support.function.builtin}   ui-args-4
+                 | '\bnentry\b'{support.function.builtin}    ui-args-4
+                 | '\bvgroup\b'{support.function.builtin}    ui-args-e
+                 | '\bhgroup\b'{support.function.builtin}    ui-args-e
+                 | '\btgroup\b'{support.function.builtin}    ui-args-e
+                 | '\bvbargraph\b'{support.function.builtin} ui-args-2
+                 | '\bhbargraph\b'{support.function.builtin} ui-args-2
+                 | '\bsoundfile\b'{support.function.builtin} ui-args-1
+                 # | fpar                          {}
+                 # | fseq                          {}
+                 # | fsum                          {}
+                 # | fprod                         {}
+                 | '\binputs\b'{support.function.builtin} paren-expr['meta.generic-name', 'variable.function']
+                 | '\boutputs\b'{support.function.builtin} paren-expr['meta.generic-name', 'variable.function']
+                 ;
+
+ui-args-0{meta.function-call.arguments} :
+  LPAREN{punctuation.section.group.begin} string
+  RPAREN{punctuation.section.group.end} ;
+ui-args-1{meta.function-call.arguments} :
+  LPAREN{punctuation.section.group.begin} string
+  PAR typical-argument RPAREN{punctuation.section.group.end} ;
+ui-args-2{meta.function-call.arguments} :
+  LPAREN{punctuation.section.group.begin} string
+  PAR typical-argument PAR typical-argument RPAREN{punctuation.section.group.end} ;
+ui-args-4{meta.function-call.arguments} :
+  LPAREN{punctuation.section.group.begin} string
+  PAR typical-argument PAR typical-argument PAR typical-argument PAR typical-argument RPAREN{punctuation.section.group.end} ;
+ui-args-e{meta.function-call.arguments} :
+  LPAREN{punctuation.section.group.begin} string
+  PAR typical-expression RPAREN{punctuation.section.group.end} ;
+
+
+paren-expr[s, t]{meta.group} :
+  LPAREN{punctuation.section.group.begin}
+  expression[s, t]
+  RPAREN{punctuation.section.group.end} ;
+case-body{meta.block.case} :
+  LBRAQ{punctuation.section.block.begin}
+  rulelist
+  RBRAQ{punctuation.section.block.end} ;
+rulelist : (paramlist `=>`{keyword.operator} typical-expression ENDDEF)* ;
+
+ffunction-body{meta.function-call.arguments} :
+  LPAREN{punctuation.group.section.begin}
+  signature
+  PAR
+  fstring
+  PAR
+  string
+  RPAREN{punctuation.group.section.end} ;
+
+signature :
+  type
+  IDENT{variable.function}
+  (OR IDENT{variable.function} (OR IDENT{variable.function})?)?
+  typelist ;
+typelist{meta.group.signature} :
+  LPAREN{punctuation.group.section.begin}
+  (type (PAR type)*)?
+  RPAREN{punctuation.group.section.end} ;
+
+f-other-body{meta.function-call.arguments} :
+  LPAREN{punctuation.group.section.begin}
+  type
+  IDENT
+  PAR
+  fstring
+  RPAREN{punctuation.group.section.end} ;
+component-body{meta.group.component} :
+  LPAREN{punctuation.group.section.begin}
+  string
+  RPAREN{punctuation.group.section.end} ;
+library-body{meta.group.library} :
+  LPAREN{punctuation.group.section.begin}
+  string
+  RPAREN{punctuation.group.section.end} ;
+environment-body{meta.block.environment} :
+  LBRAQ{punctuation.section.block.begin}
+  (variant-list statement)*
+  RBRAQ{punctuation.section.block.end} ;
+waveform-body{meta.block.waveform} :
+  LBRAQ{punctuation.section.block.begin}
+  wf-list
+  RBRAQ{punctuation.section.block.end} ;
+wf-list : wf-number (`,`{punctuation.separator} wf-number)*;
+wf-number : (ADD{constant.numeric} | SUB{constant.numeric})? NUM{constant.numeric} ;
+
+ROUTE = '\broute\b'
+route-lit['meta.generic-name', 'variable.function'] : ROUTE{support.function.builtin} ;
+route-lit[s, t] : ROUTE{invalid.illegal} ;
+route[s, t] : route-lit[s, t] route-body[s, t] ;
+route-body[s, t]{meta.function-call.arguments} :
+  LPAREN{punctuation.group.section.begin}
+  argument[s, t]
+  PAR
+  argument[s, t]
+  PAR
+  expression[s, t]
+  RPAREN{punctuation.group.section.end} ;
+
+fstring : '(<)([a-zA-Z]*(\.[a-zA-Z])?)(>)'{
+  string.quoted.other.lt-gt,
+  1: punctuation.definition.string.begin,
+  4: punctuation.definition.string.end
+} ;
+
+type : '\bint\b'{storage.type} | '\bfloat\b'{storage.type} ;
+

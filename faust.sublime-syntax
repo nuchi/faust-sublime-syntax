@@ -1,0 +1,2617 @@
+%YAML 1.2
+---
+version: 2
+name: Faust
+file_extensions:
+- dsp
+- lib
+scope: source.faust
+contexts:
+  pop1!:
+  - match: ''
+    pop: 1
+  pop2!:
+  - match: ''
+    pop: 2
+  pop3!:
+  - match: ''
+    pop: 3
+  pop5!:
+  - match: ''
+    pop: 5
+  consume!:
+  - match: \S
+    pop: 3
+  fail!:
+  - match: (?=\S)
+    pop: 1
+  fail1!:
+  - match: \S
+    scope: invalid.illegal.faust
+    set: reset1!
+  reset1!:
+  - match: \S
+    scope: invalid.illegal.faust
+  - match: \n
+    set: [fail1!, fail2!, main/]
+  fail2!:
+  - match: \S
+    scope: invalid.illegal.faust
+    set: reset2!
+  reset2!:
+  - match: \S
+    scope: invalid.illegal.faust
+  - match: \n
+    set: [fail2!, main/]
+  main:
+  - match: ''
+    push: [fail1!, fail2!, main/]
+  prototype:
+  - match: (?=//)
+    push: [pop2!, prototype@p!@1]
+  - match: (?=/\*)
+    push: [pop2!, prototype@p!@1]
+  prototype@p!@1:
+  - match: ''
+    branch_point: prototype@p!@1
+    branch: [prototype@p!@1!1, consume!]
+  prototype@p!@1!1:
+  - match: ''
+    push: /alt-0//*-0/prototype
+    pop: 2
+  /alt-0//*-0/prototype:
+  - match: (?=//)
+    push: [pop2!, /alt-0//*-0/prototype@p!@0]
+  - match: (?=/\*)
+    push: [pop2!, /alt-0//*-0/prototype@p!@0]
+  /alt-0//*-0/prototype@p!@0:
+  - match: ''
+    branch_point: /alt-0//*-0/prototype@p!@0
+    branch: [/alt-0//*-0/prototype@p!@0!0, consume!]
+  /alt-0//*-0/prototype@p!@0!0:
+  - match: ''
+    set: [pop5!, /alt-0//*-0/prototype@p!@0@fail!, /alt-0//alt-0//*-0/prototype, pop2!,
+      /alt-0//alt-0//*-0/prototype@pp!]
+  /alt-0//alt-0//*-0/prototype@pp!:
+  - match: (?=//)
+    pop: 2
+  - match: (?=/\*)
+    pop: 2
+  /alt-0//alt-0//*-0/prototype:
+  - match: (?=//)
+    set: line-comment@wrap_meta!
+  - match: (?=/\*)
+    set: block-comment@wrap_meta!
+  - include: fail!
+  block-comment@wrap_meta!:
+  - match: ''
+    set: [block-comment@meta!, pop2!, block-comment]
+  block-comment:
+  - match: ''
+    set: [/T/048d9b8, pop2!, /T/048d9b8@pp!, pop2!, /T/97453b0]
+  /T/97453b0:
+  - match: /\*
+    scope: punctuation.definition.comment.faust
+    pop: 2
+  - include: fail!
+  /T/048d9b8@pp!:
+  - match: (?=\*/)
+    pop: 2
+  /T/048d9b8:
+  - match: \*/
+    scope: punctuation.definition.comment.faust
+    pop: 2
+  - include: fail!
+  block-comment@meta!:
+  - meta_scope: comment.block.faust
+  - match: ''
+    pop: 2
+  line-comment@wrap_meta!:
+  - match: ''
+    set: [line-comment@meta!, pop2!, line-comment]
+  line-comment:
+  - match: ''
+    set: [/T/15d4a96, pop2!, /T/15d4a96@pp!, pop2!, /T/3d4cbd7]
+  /T/3d4cbd7:
+  - match: //
+    scope: punctuation.definition.comment.faust
+    pop: 2
+  - include: fail!
+  /T/15d4a96@pp!:
+  - match: (?=$\n?)
+    pop: 2
+  /T/15d4a96:
+  - match: $\n?
+    pop: 2
+  - include: fail!
+  line-comment@meta!:
+  - meta_scope: comment.line.faust
+  - match: ''
+    pop: 2
+  /alt-0//*-0/prototype@p!@0@fail!:
+  - match: ''
+    fail: /alt-0//*-0/prototype@p!@0
+  prototype@p!@1@fail!:
+  - match: ''
+    fail: prototype@p!@1
+  main/:
+  - match: (?=(?=<mdoc>))
+    push: [pop2!, /alt-0//*-0/main/]
+  - match: (?=\bdeclare\b)
+    push: [pop2!, /alt-0//*-0/main/]
+  - match: (?=\bimport\b)
+    push: [pop2!, /alt-0//*-0/main/]
+  - match: (?=\bprocess\b)
+    push: [pop2!, /alt-0//*-0/main/]
+  - match: (?=doubleprecision)
+    push: [pop2!, /alt-0//*-0/main/]
+  - match: (?=fixedpointprecision)
+    push: [pop2!, /alt-0//*-0/main/]
+  - match: (?=quadprecision)
+    push: [pop2!, /alt-0//*-0/main/]
+  - match: (?=singleprecision)
+    push: [pop2!, /alt-0//*-0/main/]
+  - match: (?=_?[a-zA-Z][_a-zA-Z0-9]*)
+    push: [pop2!, /alt-0//*-0/main/]
+  - include: fail!
+  /alt-0//*-0/main/:
+  - match: ''
+    set: [statement, pop2!, variant-list]
+  variant-list:
+  - match: (?=(?=<mdoc>))
+    pop: 2
+  - match: (?=\bdeclare\b)
+    pop: 2
+  - match: (?=\bimport\b)
+    pop: 2
+  - match: (?=\bprocess\b)
+    pop: 2
+  - match: (?=doubleprecision)
+    push: [pop2!, variant]
+  - match: (?=fixedpointprecision)
+    push: [pop2!, variant]
+  - match: (?=quadprecision)
+    push: [pop2!, variant]
+  - match: (?=singleprecision)
+    push: [pop2!, variant]
+  - match: (?=_?[a-zA-Z][_a-zA-Z0-9]*)
+    pop: 2
+  - include: fail!
+  variant:
+  - match: (?=singleprecision)
+    set: /T/5f94e00
+  - match: (?=doubleprecision)
+    set: /T/acba74b
+  - match: (?=quadprecision)
+    set: /T/10d4f31
+  - match: (?=fixedpointprecision)
+    set: /T/2cbf421
+  - include: fail!
+  /T/2cbf421:
+  - match: fixedpointprecision
+    scope: storage.modifier.faust
+    pop: 2
+  - include: fail!
+  /T/10d4f31:
+  - match: quadprecision
+    scope: storage.modifier.faust
+    pop: 2
+  - include: fail!
+  /T/acba74b:
+  - match: doubleprecision
+    scope: storage.modifier.faust
+    pop: 2
+  - include: fail!
+  /T/5f94e00:
+  - match: singleprecision
+    scope: storage.modifier.faust
+    pop: 2
+  - include: fail!
+  statement:
+  - match: (?=\bimport\b)
+    set: [/T/dd13094, pop2!, import-arg-list@wrap_meta!, pop2!, /T/5109338]
+  - match: (?=\bdeclare\b)
+    set: [/T/dd13094, pop2!, decl-string@wrap_meta!, pop2!, /alt-0/statement, pop2!,
+      /T/f626522]
+  - match: (?=\bprocess\b)
+    set: definition
+  - match: (?=(?=<mdoc>))
+    set: docs@wrap_meta!
+  - match: (?=_?[a-zA-Z][_a-zA-Z0-9]*)
+    set: definition
+  - include: fail!
+  definition:
+  - match: ''
+    set: [/T/dd13094, pop2!, typical-expression, pop2!, /T/7983a19, pop2!, /opt//opt/c92a223,
+      pop2!, defname]
+  defname:
+  - match: (?=\bprocess\b)
+    set: /T/f6601ac
+  - match: (?=_?[a-zA-Z][_a-zA-Z0-9]*)
+    set: /T/2156bbf
+  - include: fail!
+  /T/2156bbf:
+  - match: _?[a-zA-Z][_a-zA-Z0-9]*
+    scope: entity.name.function.faust
+    pop: 2
+  - include: fail!
+  /T/f6601ac:
+  - match: \bprocess\b
+    scope: entity.name.function variable.language.faust
+    pop: 2
+  - include: fail!
+  /opt//opt/c92a223:
+  - match: (?==)
+    pop: 2
+  - match: (?=\()
+    set: lambda-params@wrap_meta!
+  - include: fail!
+  lambda-params@wrap_meta!:
+  - match: ''
+    set: [lambda-params@meta!, pop2!, lambda-params]
+  lambda-params:
+  - match: ''
+    set: [/*-0/arg-param-list/ada6e9a, pop2!, argument/107a877, pop2!, /T/e99570e]
+  /T/e99570e:
+  - match: \(
+    scope: punctuation.section.arguments.begin.faust
+    pop: 2
+  - include: fail!
+  argument/107a877:
+  - match: ''
+    set: [/*-0/argument/107a877, pop2!, infixexp/a2c911a]
+  infixexp/a2c911a:
+  - match: ''
+    set: [/*-0/infixexp/a2c911a, pop2!, infixexp-1/052aa16]
+  infixexp-1/052aa16:
+  - match: ''
+    set: [/*-0/infixexp-1/052aa16, pop2!, primitive/aa92c0e]
+  primitive/aa92c0e:
+  - match: (?=<<)
+    set: /T/a716319
+  - match: (?=>>)
+    set: /T/459f5e7
+  - match: (?=<=)
+    set: /T/dae556c
+  - match: (?=>=)
+    set: /T/2811b39
+  - match: (?===)
+    set: /T/7ae7eb0
+  - match: (?=!=)
+    set: /T/01e188d
+  - match: (?=\d*(\.|\d)\d*(e[-+]?\d+)?f?)
+    set: [/T/c8f53eb, pop2!, /opt//opt/f710421]
+  - match: (?=\+)
+    set: primitive/aa92c0e@0,6
+  - match: (?=\-)
+    set: primitive/aa92c0e@0,7,54
+  - match: (?=_)
+    set: /T/2043336
+  - match: (?=!)
+    set: /T/d7508c5
+  - match: (?=\bmem\b)
+    set: /T/d5abb93
+  - match: (?=\bprefix\b)
+    set: /T/dc035e3
+  - match: (?=\bfloat\b)
+    set: type
+  - match: (?=\bint\b)
+    set: type
+  - match: (?=\*)
+    set: /T/7bc0a56
+  - match: (?=/)
+    set: /T/0044f54
+  - match: (?=%)
+    set: /T/8c9aa79
+  - match: (?=@)
+    set: /T/254c999
+  - match: (?=\&)
+    set: /T/83d22ef
+  - match: (?=\|)
+    set: /T/2472d37
+  - match: (?=\bxor\b)
+    set: /T/776c53d
+  - match: (?=<)
+    set: /T/4c852e2
+  - match: (?=>)
+    set: /T/2753e08
+  - match: (?=\battach\b)
+    set: /T/f068836
+  - match: (?=\benable\b)
+    set: /T/d3ee65e
+  - match: (?=\bcontrol\b)
+    set: /T/37047bf
+  - match: (?=\bacos\b)
+    set: /T/b877a71
+  - match: (?=\basin\b)
+    set: /T/4ea11b3
+  - match: (?=\batan\b)
+    set: /T/40e1ca7
+  - match: (?=\batan2\b)
+    set: /T/06fbd44
+  - match: (?=\bcos\b)
+    set: /T/1daba5a
+  - match: (?=\bsin\b)
+    set: /T/66ce387
+  - match: (?=\btan\b)
+    set: /T/8a6c6fd
+  - match: (?=\bexp\b)
+    set: /T/11895bb
+  - match: (?=\blog\b)
+    set: /T/d988282
+  - match: (?=\blog10\b)
+    set: /T/40cf7b0
+  - match: (?=\^)
+    set: /T/1811186
+  - match: (?=\bpow\b)
+    set: /T/4a3f092
+  - match: (?=\bsqrt\b)
+    set: /T/c9b6b00
+  - match: (?=\babs\b)
+    set: /T/e4f7057
+  - match: (?=\bmin\b)
+    set: /T/4640f08
+  - match: (?=\bmax\b)
+    set: /T/c9d7f4f
+  - match: (?=\bfmod\b)
+    set: /T/09a73a7
+  - match: (?=\bremainder\b)
+    set: /T/74e4d97
+  - match: (?=\bfloor\b)
+    set: /T/1942d4c
+  - match: (?=\bceil\b)
+    set: /T/7beed2d
+  - match: (?=\brint\b)
+    set: /T/85399f3
+  - match: (?=\brdtable\b)
+    set: /T/3bb1d6b
+  - match: (?=\brwtable\b)
+    set: /T/a6a4ff5
+  - match: (?=\bselect2\b)
+    set: /T/b2864c1
+  - match: (?=\bselect3\b)
+    set: /T/5491049
+  - match: (?=\bassertbounds\b)
+    set: /T/5101559
+  - match: (?=\blowest\b)
+    set: /T/07a4754
+  - match: (?=\bhighest\b)
+    set: /T/a76dad1
+  - match: (?=\()
+    set: paren-expr/f6b5b6c@wrap_meta!
+  - match: (?=\\)
+    set: [lambda-defn@wrap_meta!, pop2!, /T/1dc7187]
+  - match: (?=\bcase\b)
+    set: [case-body@wrap_meta!, pop2!, /T/58b7d3f]
+  - match: (?=\bffunction\b)
+    set: [ffunction-body@wrap_meta!, pop2!, /T/349ede3]
+  - match: (?=\bfconstant\b)
+    set: [f-other-body@wrap_meta!, pop2!, /T/9723dde]
+  - match: (?=\bfvariable\b)
+    set: [f-other-body@wrap_meta!, pop2!, /T/c767f1e]
+  - match: (?=\bcomponent\b)
+    set: [component-body@wrap_meta!, pop2!, /T/01bf034]
+  - match: (?=\blibrary\b)
+    set: [library-body@wrap_meta!, pop2!, /T/0d00f55]
+  - match: (?=\benvironment\b)
+    set: [environment-body@wrap_meta!, pop2!, /T/961abfc]
+  - match: (?=\bwaveform\b)
+    set: [waveform-body@wrap_meta!, pop2!, /T/7fd65e4]
+  - match: (?=\broute\b)
+    set: route/a2cff56
+  - match: (?=\bbutton\b)
+    set: [ui-args-0@wrap_meta!, pop2!, /T/9049800]
+  - match: (?=\bcheckbox\b)
+    set: [ui-args-0@wrap_meta!, pop2!, /T/10a09f7]
+  - match: (?=\bvslider\b)
+    set: [ui-args-4@wrap_meta!, pop2!, /T/24e57f9]
+  - match: (?=\bhslider\b)
+    set: [ui-args-4@wrap_meta!, pop2!, /T/419dd9b]
+  - match: (?=\bnentry\b)
+    set: [ui-args-4@wrap_meta!, pop2!, /T/ba95d12]
+  - match: (?=\bvgroup\b)
+    set: [ui-args-e@wrap_meta!, pop2!, /T/922a8ce]
+  - match: (?=\bhgroup\b)
+    set: [ui-args-e@wrap_meta!, pop2!, /T/3e9596d]
+  - match: (?=\btgroup\b)
+    set: [ui-args-e@wrap_meta!, pop2!, /T/ec71011]
+  - match: (?=\bvbargraph\b)
+    set: [ui-args-2@wrap_meta!, pop2!, /T/5952aff]
+  - match: (?=\bhbargraph\b)
+    set: [ui-args-2@wrap_meta!, pop2!, /T/ebbb425]
+  - match: (?=\bsoundfile\b)
+    set: [ui-args-1@wrap_meta!, pop2!, /T/158d611]
+  - match: (?=\binputs\b)
+    set: [paren-expr/b91d3ee@wrap_meta!, pop2!, /T/d41bdb5]
+  - match: (?=\boutputs\b)
+    set: [paren-expr/b91d3ee@wrap_meta!, pop2!, /T/645dd59]
+  - match: (?=_?[a-zA-Z][_a-zA-Z0-9]*)
+    set: [name-or-func-call/7ad33d6, pop2!, /opt//opt/872a3f8]
+  - include: fail!
+  /opt//opt/872a3f8:
+  - match: (?=\-)
+    set: /T/c3ba6a5
+  - match: (?=_?[a-zA-Z][_a-zA-Z0-9]*)
+    pop: 2
+  - include: fail!
+  /T/c3ba6a5:
+  - match: \-
+    scope: constant.numeric.faust
+    pop: 2
+  - include: fail!
+  name-or-func-call/7ad33d6:
+  - match: (?=_?[a-zA-Z][_a-zA-Z0-9]*)
+    set: name-or-func-call/7ad33d6@0,1
+  - include: fail!
+  name-or-func-call/7ad33d6@0,1:
+  - match: ''
+    branch_point: name-or-func-call/7ad33d6@0,1
+    branch: ['name-or-func-call/7ad33d6@0,1!0', 'name-or-func-call/7ad33d6@0,1!1']
+  name-or-func-call/7ad33d6@0,1!1:
+  - match: ''
+    set: [pop3!, pop3!, name-or-func-call/7ad33d6@follow!, pop2!, /T/bbbc937]
+  /T/bbbc937:
+  - match: _?[a-zA-Z][_a-zA-Z0-9]*
+    scope: variable.parameter.faust
+    pop: 2
+  - include: fail!
+  name-or-func-call/7ad33d6@follow!:
+  - match: (?=!=)
+    pop: 2
+  - match: (?=%)
+    pop: 2
+  - match: (?=')
+    pop: 2
+  - match: (?=,)
+    pop: 2
+  - match: (?=/)
+    pop: 2
+  - match: (?=:(?!>)(?<!<))
+    pop: 2
+  - match: (?=:>)
+    pop: 2
+  - match: (?=<)
+    pop: 2
+  - match: (?=<:)
+    pop: 2
+  - match: (?=<<)
+    pop: 2
+  - match: (?=<=)
+    pop: 2
+  - match: (?===)
+    pop: 2
+  - match: (?=>)
+    pop: 2
+  - match: (?=>=)
+    pop: 2
+  - match: (?=>>)
+    pop: 2
+  - match: (?=@)
+    pop: 2
+  - match: (?=\&)
+    pop: 2
+  - match: (?=\()
+    pop: 2
+  - match: (?=\))
+    pop: 2
+  - match: (?=\*)
+    pop: 2
+  - match: (?=\+)
+    pop: 2
+  - match: (?=\-)
+    pop: 2
+  - match: (?=\.)
+    pop: 2
+  - match: (?=\^)
+    pop: 2
+  - match: (?=\bletrec\b)
+    pop: 2
+  - match: (?=\bwith\b)
+    pop: 2
+  - match: (?=\bxor\b)
+    pop: 2
+  - match: (?=\|)
+    pop: 2
+  - match: (?=\~)
+    pop: 2
+  - include: fail!
+  name-or-func-call/7ad33d6@0,1!0:
+  - match: ''
+    set: [pop3!, 'name-or-func-call/7ad33d6@0,1@fail!', name-or-func-call/7ad33d6@follow!,
+      pop2!, arglist@wrap_meta!, pop2!, /T/bbbc937]
+  arglist@wrap_meta!:
+  - match: ''
+    set: [arglist@meta!, pop2!, arglist]
+  arglist:
+  - match: ''
+    set: [/*-0/arg-param-list/04fd23e, pop2!, typical-argument, pop2!, /T/e99570e]
+  typical-argument:
+  - match: ''
+    set: [/*-0/argument/477f598, pop2!, infixexp/92d36e8]
+  infixexp/92d36e8:
+  - match: ''
+    set: [/*-0/infixexp/92d36e8, pop2!, infixexp-1/0115f85]
+  infixexp-1/0115f85:
+  - match: ''
+    set: [/*-0/infixexp-1/0115f85, pop2!, primitive/83508ff]
+  primitive/83508ff:
+  - match: (?=<<)
+    set: /T/a716319
+  - match: (?=>>)
+    set: /T/459f5e7
+  - match: (?=<=)
+    set: /T/dae556c
+  - match: (?=>=)
+    set: /T/2811b39
+  - match: (?===)
+    set: /T/7ae7eb0
+  - match: (?=!=)
+    set: /T/01e188d
+  - match: (?=\d*(\.|\d)\d*(e[-+]?\d+)?f?)
+    set: [/T/c8f53eb, pop2!, /opt//opt/f710421]
+  - match: (?=\+)
+    set: primitive/83508ff@0,6
+  - match: (?=\-)
+    set: primitive/83508ff@0,7,54
+  - match: (?=_)
+    set: /T/2043336
+  - match: (?=!)
+    set: /T/d7508c5
+  - match: (?=\bmem\b)
+    set: /T/d5abb93
+  - match: (?=\bprefix\b)
+    set: /T/dc035e3
+  - match: (?=\bfloat\b)
+    set: type
+  - match: (?=\bint\b)
+    set: type
+  - match: (?=\*)
+    set: /T/7bc0a56
+  - match: (?=/)
+    set: /T/0044f54
+  - match: (?=%)
+    set: /T/8c9aa79
+  - match: (?=@)
+    set: /T/254c999
+  - match: (?=\&)
+    set: /T/83d22ef
+  - match: (?=\|)
+    set: /T/2472d37
+  - match: (?=\bxor\b)
+    set: /T/776c53d
+  - match: (?=<)
+    set: /T/4c852e2
+  - match: (?=>)
+    set: /T/2753e08
+  - match: (?=\battach\b)
+    set: /T/f068836
+  - match: (?=\benable\b)
+    set: /T/d3ee65e
+  - match: (?=\bcontrol\b)
+    set: /T/37047bf
+  - match: (?=\bacos\b)
+    set: /T/b877a71
+  - match: (?=\basin\b)
+    set: /T/4ea11b3
+  - match: (?=\batan\b)
+    set: /T/40e1ca7
+  - match: (?=\batan2\b)
+    set: /T/06fbd44
+  - match: (?=\bcos\b)
+    set: /T/1daba5a
+  - match: (?=\bsin\b)
+    set: /T/66ce387
+  - match: (?=\btan\b)
+    set: /T/8a6c6fd
+  - match: (?=\bexp\b)
+    set: /T/11895bb
+  - match: (?=\blog\b)
+    set: /T/d988282
+  - match: (?=\blog10\b)
+    set: /T/40cf7b0
+  - match: (?=\^)
+    set: /T/1811186
+  - match: (?=\bpow\b)
+    set: /T/4a3f092
+  - match: (?=\bsqrt\b)
+    set: /T/c9b6b00
+  - match: (?=\babs\b)
+    set: /T/e4f7057
+  - match: (?=\bmin\b)
+    set: /T/4640f08
+  - match: (?=\bmax\b)
+    set: /T/c9d7f4f
+  - match: (?=\bfmod\b)
+    set: /T/09a73a7
+  - match: (?=\bremainder\b)
+    set: /T/74e4d97
+  - match: (?=\bfloor\b)
+    set: /T/1942d4c
+  - match: (?=\bceil\b)
+    set: /T/7beed2d
+  - match: (?=\brint\b)
+    set: /T/85399f3
+  - match: (?=\brdtable\b)
+    set: /T/3bb1d6b
+  - match: (?=\brwtable\b)
+    set: /T/a6a4ff5
+  - match: (?=\bselect2\b)
+    set: /T/b2864c1
+  - match: (?=\bselect3\b)
+    set: /T/5491049
+  - match: (?=\bassertbounds\b)
+    set: /T/5101559
+  - match: (?=\blowest\b)
+    set: /T/07a4754
+  - match: (?=\bhighest\b)
+    set: /T/a76dad1
+  - match: (?=\()
+    set: paren-expr/b91d3ee@wrap_meta!
+  - match: (?=\\)
+    set: [lambda-defn@wrap_meta!, pop2!, /T/1dc7187]
+  - match: (?=\bcase\b)
+    set: [case-body@wrap_meta!, pop2!, /T/58b7d3f]
+  - match: (?=\bffunction\b)
+    set: [ffunction-body@wrap_meta!, pop2!, /T/349ede3]
+  - match: (?=\bfconstant\b)
+    set: [f-other-body@wrap_meta!, pop2!, /T/9723dde]
+  - match: (?=\bfvariable\b)
+    set: [f-other-body@wrap_meta!, pop2!, /T/c767f1e]
+  - match: (?=\bcomponent\b)
+    set: [component-body@wrap_meta!, pop2!, /T/01bf034]
+  - match: (?=\blibrary\b)
+    set: [library-body@wrap_meta!, pop2!, /T/0d00f55]
+  - match: (?=\benvironment\b)
+    set: [environment-body@wrap_meta!, pop2!, /T/961abfc]
+  - match: (?=\bwaveform\b)
+    set: [waveform-body@wrap_meta!, pop2!, /T/7fd65e4]
+  - match: (?=\broute\b)
+    set: route/63123b5
+  - match: (?=\bbutton\b)
+    set: [ui-args-0@wrap_meta!, pop2!, /T/9049800]
+  - match: (?=\bcheckbox\b)
+    set: [ui-args-0@wrap_meta!, pop2!, /T/10a09f7]
+  - match: (?=\bvslider\b)
+    set: [ui-args-4@wrap_meta!, pop2!, /T/24e57f9]
+  - match: (?=\bhslider\b)
+    set: [ui-args-4@wrap_meta!, pop2!, /T/419dd9b]
+  - match: (?=\bnentry\b)
+    set: [ui-args-4@wrap_meta!, pop2!, /T/ba95d12]
+  - match: (?=\bvgroup\b)
+    set: [ui-args-e@wrap_meta!, pop2!, /T/922a8ce]
+  - match: (?=\bhgroup\b)
+    set: [ui-args-e@wrap_meta!, pop2!, /T/3e9596d]
+  - match: (?=\btgroup\b)
+    set: [ui-args-e@wrap_meta!, pop2!, /T/ec71011]
+  - match: (?=\bvbargraph\b)
+    set: [ui-args-2@wrap_meta!, pop2!, /T/5952aff]
+  - match: (?=\bhbargraph\b)
+    set: [ui-args-2@wrap_meta!, pop2!, /T/ebbb425]
+  - match: (?=\bsoundfile\b)
+    set: [ui-args-1@wrap_meta!, pop2!, /T/158d611]
+  - match: (?=\binputs\b)
+    set: [paren-expr/b91d3ee@wrap_meta!, pop2!, /T/d41bdb5]
+  - match: (?=\boutputs\b)
+    set: [paren-expr/b91d3ee@wrap_meta!, pop2!, /T/645dd59]
+  - match: (?=_?[a-zA-Z][_a-zA-Z0-9]*)
+    set: [name-or-func-call/ae9127c, pop2!, /opt//opt/872a3f8]
+  - include: fail!
+  name-or-func-call/ae9127c:
+  - match: (?=_?[a-zA-Z][_a-zA-Z0-9]*)
+    set: name-or-func-call/ae9127c@0,1
+  - include: fail!
+  name-or-func-call/ae9127c@0,1:
+  - match: ''
+    branch_point: name-or-func-call/ae9127c@0,1
+    branch: ['name-or-func-call/ae9127c@0,1!0', 'name-or-func-call/ae9127c@0,1!1']
+  name-or-func-call/ae9127c@0,1!1:
+  - match: ''
+    set: [pop3!, pop3!, name-or-func-call/ae9127c@follow!, pop2!, /T/fbeceb8]
+  /T/fbeceb8:
+  - match: _?[a-zA-Z][_a-zA-Z0-9]*
+    scope: meta.generic-name.faust
+    pop: 2
+  - include: fail!
+  name-or-func-call/ae9127c@follow!:
+  - match: (?=!=)
+    pop: 2
+  - match: (?=%)
+    pop: 2
+  - match: (?=')
+    pop: 2
+  - match: (?=,)
+    pop: 2
+  - match: (?=/)
+    pop: 2
+  - match: (?=:(?!>)(?<!<))
+    pop: 2
+  - match: (?=:>)
+    pop: 2
+  - match: (?=;)
+    pop: 2
+  - match: (?=<)
+    pop: 2
+  - match: (?=<:)
+    pop: 2
+  - match: (?=<<)
+    pop: 2
+  - match: (?=<=)
+    pop: 2
+  - match: (?===)
+    pop: 2
+  - match: (?=>)
+    pop: 2
+  - match: (?=>=)
+    pop: 2
+  - match: (?=>>)
+    pop: 2
+  - match: (?=@)
+    pop: 2
+  - match: (?=\&)
+    pop: 2
+  - match: (?=\()
+    pop: 2
+  - match: (?=\))
+    pop: 2
+  - match: (?=\*)
+    pop: 2
+  - match: (?=\+)
+    pop: 2
+  - match: (?=\-)
+    pop: 2
+  - match: (?=\.)
+    pop: 2
+  - match: (?=\^)
+    pop: 2
+  - match: (?=\bletrec\b)
+    pop: 2
+  - match: (?=\bwith\b)
+    pop: 2
+  - match: (?=\bxor\b)
+    pop: 2
+  - match: (?=\|)
+    pop: 2
+  - match: (?=\~)
+    pop: 2
+  - include: fail!
+  name-or-func-call/ae9127c@0,1!0:
+  - match: ''
+    set: [pop3!, 'name-or-func-call/ae9127c@0,1@fail!', name-or-func-call/ae9127c@follow!,
+      pop2!, arglist@wrap_meta!, pop2!, /T/39743c2]
+  /T/39743c2:
+  - match: _?[a-zA-Z][_a-zA-Z0-9]*
+    scope: variable.function.faust
+    pop: 2
+  - include: fail!
+  name-or-func-call/ae9127c@0,1@fail!:
+  - match: ''
+    fail: name-or-func-call/ae9127c@0,1
+  /T/645dd59:
+  - match: \boutputs\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  paren-expr/b91d3ee@wrap_meta!:
+  - match: ''
+    set: [paren-expr/b91d3ee@meta!, pop2!, paren-expr/b91d3ee]
+  paren-expr/b91d3ee:
+  - match: ''
+    set: [/T/8715cc4, pop2!, typical-expression, pop2!, /T/2405f67]
+  /T/2405f67:
+  - match: \(
+    scope: punctuation.section.group.begin.faust
+    pop: 2
+  - include: fail!
+  typical-expression:
+  - match: ''
+    set: [/*-0/expression/8be7c96, pop2!, expression-1/af1e09d]
+  expression-1/af1e09d:
+  - match: ''
+    set: [/*-0/expression-1/af1e09d, pop2!, infixexp/92d36e8]
+  /*-0/expression-1/af1e09d:
+  - match: (?=,)
+    pop: 2
+  - match: (?=:(?!>)(?<!<))
+    pop: 2
+  - match: (?=:>)
+    pop: 2
+  - match: (?=;)
+    pop: 2
+  - match: (?=<:)
+    pop: 2
+  - match: (?=\))
+    pop: 2
+  - match: (?=\~)
+    pop: 2
+  - match: (?=\bletrec\b)
+    push: [pop2!, /alt-0//*-0/expression-1/af1e09d]
+  - match: (?=\bwith\b)
+    push: [pop2!, /alt-0//*-0/expression-1/af1e09d]
+  - include: fail!
+  /alt-0//*-0/expression-1/af1e09d:
+  - match: (?=\bwith\b)
+    set: [with-body@wrap_meta!, pop2!, /T/a8f5f8d]
+  - match: (?=\bletrec\b)
+    set: [letrec-body@wrap_meta!, pop2!, /T/f7afc5b]
+  - include: fail!
+  /T/f7afc5b:
+  - match: \bletrec\b
+    scope: keyword.operator.letrec.faust
+    pop: 2
+  - include: fail!
+  letrec-body@wrap_meta!:
+  - match: ''
+    set: [letrec-body@meta!, pop2!, letrec-body]
+  letrec-body:
+  - match: ''
+    set: [/*-0/letrec-body, pop2!, /T/3777028]
+  /T/3777028:
+  - match: \{
+    scope: punctuation.section.block.begin.faust
+    pop: 2
+  - include: fail!
+  /*-0/letrec-body:
+  - match: (?=\})
+    set: /T/7a57953
+  - match: (?=')
+    push: [pop2!, recinition]
+  - include: fail!
+  recinition:
+  - match: ''
+    set: [/T/dd13094, pop2!, typical-expression, pop2!, /T/7983a19, pop2!, recname]
+  recname:
+  - match: ''
+    set: [/T/c393c5e, pop2!, /T/3715c77]
+  /T/3715c77:
+  - match: "'"
+    scope: entity.name.faust
+    pop: 2
+  - include: fail!
+  /T/c393c5e:
+  - match: _?[a-zA-Z][_a-zA-Z0-9]*
+    scope: entity.name.faust
+    pop: 2
+  - include: fail!
+  /T/7983a19:
+  - match: '='
+    scope: keyword.operator.assignment.faust
+    pop: 2
+  - include: fail!
+  /T/dd13094:
+  - match: ;
+    pop: 2
+  - include: fail!
+  /T/7a57953:
+  - match: \}
+    scope: punctuation.section.block.end.faust
+    pop: 2
+  - include: fail!
+  letrec-body@meta!:
+  - meta_scope: meta.block.letrec.faust
+  - match: ''
+    pop: 2
+  /T/a8f5f8d:
+  - match: \bwith\b
+    scope: keyword.operator.with.faust
+    pop: 2
+  - include: fail!
+  with-body@wrap_meta!:
+  - match: ''
+    set: [with-body@meta!, pop2!, with-body]
+  with-body:
+  - match: ''
+    set: [/T/7a57953, pop2!, deflist, pop2!, /T/3777028]
+  deflist:
+  - match: (?=\})
+    pop: 2
+  - match: (?=\bprocess\b)
+    push: [pop2!, /alt-0//*-0/deflist]
+  - match: (?=doubleprecision)
+    push: [pop2!, /alt-0//*-0/deflist]
+  - match: (?=fixedpointprecision)
+    push: [pop2!, /alt-0//*-0/deflist]
+  - match: (?=quadprecision)
+    push: [pop2!, /alt-0//*-0/deflist]
+  - match: (?=singleprecision)
+    push: [pop2!, /alt-0//*-0/deflist]
+  - match: (?=_?[a-zA-Z][_a-zA-Z0-9]*)
+    push: [pop2!, /alt-0//*-0/deflist]
+  - include: fail!
+  /alt-0//*-0/deflist:
+  - match: ''
+    set: [definition, pop2!, variant-list]
+  with-body@meta!:
+  - meta_scope: meta.block.with.faust
+  - match: ''
+    pop: 2
+  /*-0/expression/8be7c96:
+  - match: (?=;)
+    pop: 2
+  - match: (?=\))
+    pop: 2
+  - match: (?=,)
+    push: [pop2!, /alt-0//*-0/expression/8be7c96]
+  - match: (?=:(?!>)(?<!<))
+    push: [pop2!, /alt-0//*-0/expression/8be7c96]
+  - match: (?=:>)
+    push: [pop2!, /alt-0//*-0/expression/8be7c96]
+  - match: (?=<:)
+    push: [pop2!, /alt-0//*-0/expression/8be7c96]
+  - match: (?=\~)
+    push: [pop2!, /alt-0//*-0/expression/8be7c96]
+  - include: fail!
+  /alt-0//*-0/expression/8be7c96:
+  - match: ''
+    set: [expression-1/af1e09d, pop2!, /alt-0//alt-0//*-0/expression/8be7c96]
+  /alt-0//alt-0//*-0/expression/8be7c96:
+  - match: (?=<:)
+    set: /T/9a22c65
+  - match: (?=:>)
+    set: /T/b42b84b
+  - match: (?=:(?!>)(?<!<))
+    set: /T/b95dfcd
+  - match: (?=,)
+    set: /T/060b323
+  - match: (?=\~)
+    set: /T/27a6fd6
+  - include: fail!
+  /T/27a6fd6:
+  - match: \~
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/060b323:
+  - match: ','
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/b95dfcd:
+  - match: :(?!>)(?<!<)
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/b42b84b:
+  - match: :>
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/9a22c65:
+  - match: '<:'
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/8715cc4:
+  - match: \)
+    scope: punctuation.section.group.end.faust
+    pop: 2
+  - include: fail!
+  paren-expr/b91d3ee@meta!:
+  - meta_scope: meta.group.faust
+  - match: ''
+    pop: 2
+  /T/d41bdb5:
+  - match: \binputs\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/158d611:
+  - match: \bsoundfile\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  ui-args-1@wrap_meta!:
+  - match: ''
+    set: [ui-args-1@meta!, pop2!, ui-args-1]
+  ui-args-1:
+  - match: ''
+    set: [/T/8715cc4, pop2!, typical-argument, pop2!, /T/04cc951, pop2!, decl-string@wrap_meta!,
+      pop2!, /T/2405f67]
+  decl-string@wrap_meta!:
+  - meta_include_prototype: false
+  - match: ''
+    set: [decl-string@meta!, pop2!, decl-string]
+  decl-string:
+  - meta_include_prototype: false
+  - match: ''
+    set: [^/*-0/string, pop2!, ^/T/ef756ef]
+  ^/T/ef756ef:
+  - meta_include_prototype: false
+  - match: '"'
+    scope: punctuation.definition.string.begin.faust
+    pop: 2
+  - include: fail!
+  ^/*-0/string:
+  - meta_include_prototype: false
+  - match: (?=")
+    push: [pop2!, /*-0/string@p!@0]
+  - match: (?=\\.)
+    push: [pop2!, /*-0/string@p!@1]
+  /*-0/string@p!@1:
+  - meta_include_prototype: false
+  - match: ''
+    branch_point: /*-0/string@p!@1
+    branch: [/*-0/string@p!@1!1, consume!]
+  /*-0/string@p!@1!1:
+  - meta_include_prototype: false
+  - match: ''
+    push: ^/alt-0//*-0/string
+    pop: 2
+  ^/alt-0//*-0/string:
+  - meta_include_prototype: false
+  - match: (?=\\.)
+    push: [pop2!, /alt-0//*-0/string@p!@0]
+  /alt-0//*-0/string@p!@0:
+  - meta_include_prototype: false
+  - match: ''
+    branch_point: /alt-0//*-0/string@p!@0
+    branch: [/alt-0//*-0/string@p!@0!0, consume!]
+  /alt-0//*-0/string@p!@0!0:
+  - meta_include_prototype: false
+  - match: ''
+    set: [pop5!, /alt-0//*-0/string@p!@0@fail!, ^/T/9f13bcb, pop2!, ^/T/9f13bcb@pp!]
+  ^/T/9f13bcb@pp!:
+  - meta_include_prototype: false
+  - match: (?=\\.)
+    pop: 2
+  ^/T/9f13bcb:
+  - meta_include_prototype: false
+  - match: \\.
+    scope: constant.character.escape.faust
+    pop: 2
+  - include: fail!
+  /alt-0//*-0/string@p!@0@fail!:
+  - meta_include_prototype: false
+  - match: ''
+    fail: /alt-0//*-0/string@p!@0
+  /*-0/string@follow!:
+  - meta_include_prototype: false
+  - match: (?=,)
+    pop: 2
+  - match: (?=;)
+    pop: 2
+  - match: (?=\))
+    pop: 2
+  - include: fail!
+  /*-0/string@p!@1@fail!:
+  - meta_include_prototype: false
+  - match: ''
+    fail: /*-0/string@p!@1
+  /*-0/string@p!@0:
+  - meta_include_prototype: false
+  - match: ''
+    branch_point: /*-0/string@p!@0
+    branch: [/*-0/string@p!@0!0, consume!]
+  /*-0/string@p!@0!0:
+  - meta_include_prototype: false
+  - match: ''
+    set: [pop5!, /*-0/string@p!@0@fail!, /*-0/string@follow!, pop2!, ^/T/8bb9f54,
+      pop2!, ^/T/8bb9f54@pp!]
+  ^/T/8bb9f54@pp!:
+  - meta_include_prototype: false
+  - match: (?=")
+    pop: 2
+  ^/T/8bb9f54:
+  - meta_include_prototype: false
+  - match: '"'
+    scope: punctuation.definition.string.end.faust
+    pop: 2
+  - include: fail!
+  /*-0/string@p!@0@fail!:
+  - meta_include_prototype: false
+  - match: ''
+    fail: /*-0/string@p!@0
+  decl-string@meta!:
+  - meta_include_prototype: false
+  - meta_scope: string.quoted.faust
+  - match: ''
+    pop: 2
+  /T/04cc951:
+  - match: ','
+    pop: 2
+  - include: fail!
+  ui-args-1@meta!:
+  - meta_scope: meta.function-call.arguments.faust
+  - match: ''
+    pop: 2
+  /T/ebbb425:
+  - match: \bhbargraph\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  ui-args-2@wrap_meta!:
+  - match: ''
+    set: [ui-args-2@meta!, pop2!, ui-args-2]
+  ui-args-2:
+  - match: ''
+    set: [/T/8715cc4, pop2!, typical-argument, pop2!, /T/04cc951, pop2!, typical-argument,
+      pop2!, /T/04cc951, pop2!, decl-string@wrap_meta!, pop2!, /T/2405f67]
+  ui-args-2@meta!:
+  - meta_scope: meta.function-call.arguments.faust
+  - match: ''
+    pop: 2
+  /T/5952aff:
+  - match: \bvbargraph\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/ec71011:
+  - match: \btgroup\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  ui-args-e@wrap_meta!:
+  - match: ''
+    set: [ui-args-e@meta!, pop2!, ui-args-e]
+  ui-args-e:
+  - match: ''
+    set: [/T/8715cc4, pop2!, typical-expression, pop2!, /T/04cc951, pop2!, decl-string@wrap_meta!,
+      pop2!, /T/2405f67]
+  ui-args-e@meta!:
+  - meta_scope: meta.function-call.arguments.faust
+  - match: ''
+    pop: 2
+  /T/3e9596d:
+  - match: \bhgroup\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/922a8ce:
+  - match: \bvgroup\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/ba95d12:
+  - match: \bnentry\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  ui-args-4@wrap_meta!:
+  - match: ''
+    set: [ui-args-4@meta!, pop2!, ui-args-4]
+  ui-args-4:
+  - match: ''
+    set: [/T/8715cc4, pop2!, typical-argument, pop2!, /T/04cc951, pop2!, typical-argument,
+      pop2!, /T/04cc951, pop2!, typical-argument, pop2!, /T/04cc951, pop2!, typical-argument,
+      pop2!, /T/04cc951, pop2!, decl-string@wrap_meta!, pop2!, /T/2405f67]
+  ui-args-4@meta!:
+  - meta_scope: meta.function-call.arguments.faust
+  - match: ''
+    pop: 2
+  /T/419dd9b:
+  - match: \bhslider\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/24e57f9:
+  - match: \bvslider\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/10a09f7:
+  - match: \bcheckbox\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  ui-args-0@wrap_meta!:
+  - match: ''
+    set: [ui-args-0@meta!, pop2!, ui-args-0]
+  ui-args-0:
+  - match: ''
+    set: [/T/8715cc4, pop2!, decl-string@wrap_meta!, pop2!, /T/2405f67]
+  ui-args-0@meta!:
+  - meta_scope: meta.function-call.arguments.faust
+  - match: ''
+    pop: 2
+  /T/9049800:
+  - match: \bbutton\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  route/63123b5:
+  - match: ''
+    set: [route-body/381fbca@wrap_meta!, pop2!, route-lit/0c72b7b]
+  route-lit/0c72b7b:
+  - match: ''
+    set: /T/2e68100
+  /T/2e68100:
+  - match: \broute\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  route-body/381fbca@wrap_meta!:
+  - match: ''
+    set: [route-body/381fbca@meta!, pop2!, route-body/381fbca]
+  route-body/381fbca:
+  - match: ''
+    set: [/T/6ac006f, pop2!, typical-expression, pop2!, /T/04cc951, pop2!, typical-argument,
+      pop2!, /T/04cc951, pop2!, typical-argument, pop2!, /T/d277520]
+  /T/d277520:
+  - match: \(
+    scope: punctuation.group.section.begin.faust
+    pop: 2
+  - include: fail!
+  /T/6ac006f:
+  - match: \)
+    scope: punctuation.group.section.end.faust
+    pop: 2
+  - include: fail!
+  route-body/381fbca@meta!:
+  - meta_scope: meta.function-call.arguments.faust
+  - match: ''
+    pop: 2
+  /T/7fd65e4:
+  - match: \bwaveform\b
+    scope: support.type.faust
+    pop: 2
+  - include: fail!
+  waveform-body@wrap_meta!:
+  - match: ''
+    set: [waveform-body@meta!, pop2!, waveform-body]
+  waveform-body:
+  - match: ''
+    set: [/T/7a57953, pop2!, wf-list, pop2!, /T/3777028]
+  wf-list:
+  - match: ''
+    set: [/*-0/wf-list, pop2!, wf-number]
+  wf-number:
+  - match: ''
+    set: [/T/c8f53eb, pop2!, /opt//opt/f710421]
+  /opt//opt/f710421:
+  - match: (?=\d*(\.|\d)\d*(e[-+]?\d+)?f?)
+    pop: 2
+  - match: (?=\+)
+    set: /alt-0//opt//opt/f710421
+  - match: (?=\-)
+    set: /alt-0//opt//opt/f710421
+  - include: fail!
+  /alt-0//opt//opt/f710421:
+  - match: (?=\+)
+    set: /T/e36e958
+  - match: (?=\-)
+    set: /T/c3ba6a5
+  - include: fail!
+  /T/e36e958:
+  - match: \+
+    scope: constant.numeric.faust
+    pop: 2
+  - include: fail!
+  /T/c8f53eb:
+  - match: \d*(\.|\d)\d*(e[-+]?\d+)?f?
+    scope: constant.numeric.faust
+    pop: 2
+  - include: fail!
+  /*-0/wf-list:
+  - match: (?=\})
+    pop: 2
+  - match: (?=,)
+    push: [pop2!, /alt-0//*-0/wf-list]
+  - include: fail!
+  /alt-0//*-0/wf-list:
+  - match: ''
+    set: [wf-number, pop2!, /T/9d5cd0c]
+  /T/9d5cd0c:
+  - match: ','
+    scope: punctuation.separator.faust
+    pop: 2
+  - include: fail!
+  waveform-body@meta!:
+  - meta_scope: meta.block.waveform.faust
+  - match: ''
+    pop: 2
+  /T/961abfc:
+  - match: \benvironment\b
+    scope: keyword.control.faust
+    pop: 2
+  - include: fail!
+  environment-body@wrap_meta!:
+  - match: ''
+    set: [environment-body@meta!, pop2!, environment-body]
+  environment-body:
+  - match: ''
+    set: [/*-0/environment-body, pop2!, /T/3777028]
+  /*-0/environment-body:
+  - match: (?=\})
+    set: /T/7a57953
+  - match: (?=(?=<mdoc>))
+    push: [pop2!, /alt-0//*-0/environment-body]
+  - match: (?=\bdeclare\b)
+    push: [pop2!, /alt-0//*-0/environment-body]
+  - match: (?=\bimport\b)
+    push: [pop2!, /alt-0//*-0/environment-body]
+  - match: (?=\bprocess\b)
+    push: [pop2!, /alt-0//*-0/environment-body]
+  - match: (?=doubleprecision)
+    push: [pop2!, /alt-0//*-0/environment-body]
+  - match: (?=fixedpointprecision)
+    push: [pop2!, /alt-0//*-0/environment-body]
+  - match: (?=quadprecision)
+    push: [pop2!, /alt-0//*-0/environment-body]
+  - match: (?=singleprecision)
+    push: [pop2!, /alt-0//*-0/environment-body]
+  - match: (?=_?[a-zA-Z][_a-zA-Z0-9]*)
+    push: [pop2!, /alt-0//*-0/environment-body]
+  - include: fail!
+  /alt-0//*-0/environment-body:
+  - match: ''
+    set: [statement, pop2!, variant-list]
+  environment-body@meta!:
+  - meta_scope: meta.block.environment.faust
+  - match: ''
+    pop: 2
+  /T/0d00f55:
+  - match: \blibrary\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  library-body@wrap_meta!:
+  - match: ''
+    set: [library-body@meta!, pop2!, library-body]
+  library-body:
+  - match: ''
+    set: [/T/6ac006f, pop2!, decl-string@wrap_meta!, pop2!, /T/d277520]
+  library-body@meta!:
+  - meta_scope: meta.group.library.faust
+  - match: ''
+    pop: 2
+  /T/01bf034:
+  - match: \bcomponent\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  component-body@wrap_meta!:
+  - match: ''
+    set: [component-body@meta!, pop2!, component-body]
+  component-body:
+  - match: ''
+    set: [/T/6ac006f, pop2!, decl-string@wrap_meta!, pop2!, /T/d277520]
+  component-body@meta!:
+  - meta_scope: meta.group.component.faust
+  - match: ''
+    pop: 2
+  /T/c767f1e:
+  - match: \bfvariable\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  f-other-body@wrap_meta!:
+  - match: ''
+    set: [f-other-body@meta!, pop2!, f-other-body]
+  f-other-body:
+  - match: ''
+    set: [/T/6ac006f, pop2!, fstring, pop2!, /T/04cc951, pop2!, /T/f2b0cab, pop2!,
+      type, pop2!, /T/d277520]
+  type:
+  - match: (?=\bint\b)
+    set: /T/b8e588a
+  - match: (?=\bfloat\b)
+    set: /T/c479d6b
+  - include: fail!
+  /T/c479d6b:
+  - match: \bfloat\b
+    scope: storage.type.faust
+    pop: 2
+  - include: fail!
+  /T/b8e588a:
+  - match: \bint\b
+    scope: storage.type.faust
+    pop: 2
+  - include: fail!
+  /T/f2b0cab:
+  - match: _?[a-zA-Z][_a-zA-Z0-9]*
+    pop: 2
+  - include: fail!
+  fstring:
+  - match: ''
+    set: /T/3870b2b
+  /T/3870b2b:
+  - match: (<)([a-zA-Z]*(\.[a-zA-Z])?)(>)
+    scope: string.quoted.other.lt-gt.faust
+    captures:
+      1: punctuation.definition.string.begin.faust
+      4: punctuation.definition.string.end.faust
+    pop: 2
+  - include: fail!
+  f-other-body@meta!:
+  - meta_scope: meta.function-call.arguments.faust
+  - match: ''
+    pop: 2
+  /T/9723dde:
+  - match: \bfconstant\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/349ede3:
+  - match: \bffunction\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  ffunction-body@wrap_meta!:
+  - match: ''
+    set: [ffunction-body@meta!, pop2!, ffunction-body]
+  ffunction-body:
+  - match: ''
+    set: [/T/6ac006f, pop2!, decl-string@wrap_meta!, pop2!, /T/04cc951, pop2!, fstring,
+      pop2!, /T/04cc951, pop2!, signature, pop2!, /T/d277520]
+  signature:
+  - match: ''
+    set: [typelist@wrap_meta!, pop2!, /opt//opt/c9e1b68, pop2!, /T/39743c2, pop2!,
+      type]
+  /opt//opt/c9e1b68:
+  - match: (?=\()
+    pop: 2
+  - match: (?=\|)
+    set: /alt-0//opt//opt/c9e1b68
+  - include: fail!
+  /alt-0//opt//opt/c9e1b68:
+  - match: ''
+    set: [/opt//opt/0bb83a2, pop2!, /T/39743c2, pop2!, /T/cde410e]
+  /T/cde410e:
+  - match: \|
+    pop: 2
+  - include: fail!
+  /opt//opt/0bb83a2:
+  - match: (?=\()
+    pop: 2
+  - match: (?=\|)
+    set: /alt-0//opt//opt/0bb83a2
+  - include: fail!
+  /alt-0//opt//opt/0bb83a2:
+  - match: ''
+    set: [/T/39743c2, pop2!, /T/cde410e]
+  typelist@wrap_meta!:
+  - match: ''
+    set: [typelist@meta!, pop2!, typelist]
+  typelist:
+  - match: ''
+    set: [/T/6ac006f, pop2!, /opt//opt/b3b5c76, pop2!, /T/d277520]
+  /opt//opt/b3b5c76:
+  - match: (?=\))
+    pop: 2
+  - match: (?=\bfloat\b)
+    set: /alt-0//opt//opt/b3b5c76
+  - match: (?=\bint\b)
+    set: /alt-0//opt//opt/b3b5c76
+  - include: fail!
+  /alt-0//opt//opt/b3b5c76:
+  - match: ''
+    set: [/*-0//alt-0//opt//opt/b3b5c76, pop2!, type]
+  /*-0//alt-0//opt//opt/b3b5c76:
+  - match: (?=\))
+    pop: 2
+  - match: (?=,)
+    push: [pop2!, /alt-0//*-0//alt-0//opt//opt/b3b5c76]
+  - include: fail!
+  /alt-0//*-0//alt-0//opt//opt/b3b5c76:
+  - match: ''
+    set: [type, pop2!, /T/04cc951]
+  typelist@meta!:
+  - meta_scope: meta.group.signature.faust
+  - match: ''
+    pop: 2
+  ffunction-body@meta!:
+  - meta_scope: meta.function-call.arguments.faust
+  - match: ''
+    pop: 2
+  /T/58b7d3f:
+  - match: \bcase\b
+    scope: keyword.control.case.faust
+    pop: 2
+  - include: fail!
+  case-body@wrap_meta!:
+  - match: ''
+    set: [case-body@meta!, pop2!, case-body]
+  case-body:
+  - match: ''
+    set: [/T/7a57953, pop2!, rulelist, pop2!, /T/3777028]
+  rulelist:
+  - match: (?=\})
+    pop: 2
+  - match: (?=\()
+    push: [pop2!, /alt-0//*-0/rulelist]
+  - include: fail!
+  /alt-0//*-0/rulelist:
+  - match: ''
+    set: [/T/dd13094, pop2!, typical-expression, pop2!, /T/d226d83, pop2!, lambda-params@wrap_meta!]
+  /T/d226d83:
+  - match: =>
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  case-body@meta!:
+  - meta_scope: meta.block.case.faust
+  - match: ''
+    pop: 2
+  /T/1dc7187:
+  - match: \\
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  lambda-defn@wrap_meta!:
+  - match: ''
+    set: [lambda-defn@meta!, pop2!, lambda-defn]
+  lambda-defn:
+  - match: ''
+    set: [paren-expr/b91d3ee@wrap_meta!, pop2!, /T/8562177, pop2!, lambda-params@wrap_meta!]
+  /T/8562177:
+  - match: \.
+    pop: 2
+  - include: fail!
+  lambda-defn@meta!:
+  - meta_scope: meta.function.lambda.faust
+  - match: ''
+    pop: 2
+  /T/a76dad1:
+  - match: \bhighest\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/07a4754:
+  - match: \blowest\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/5101559:
+  - match: \bassertbounds\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/5491049:
+  - match: \bselect3\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/b2864c1:
+  - match: \bselect2\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/a6a4ff5:
+  - match: \brwtable\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/3bb1d6b:
+  - match: \brdtable\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/85399f3:
+  - match: \brint\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/7beed2d:
+  - match: \bceil\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/1942d4c:
+  - match: \bfloor\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/74e4d97:
+  - match: \bremainder\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/09a73a7:
+  - match: \bfmod\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/c9d7f4f:
+  - match: \bmax\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/4640f08:
+  - match: \bmin\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/e4f7057:
+  - match: \babs\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/c9b6b00:
+  - match: \bsqrt\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/4a3f092:
+  - match: \bpow\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/1811186:
+  - match: \^
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/40cf7b0:
+  - match: \blog10\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/d988282:
+  - match: \blog\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/11895bb:
+  - match: \bexp\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/8a6c6fd:
+  - match: \btan\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/66ce387:
+  - match: \bsin\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/1daba5a:
+  - match: \bcos\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/06fbd44:
+  - match: \batan2\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/40e1ca7:
+  - match: \batan\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/4ea11b3:
+  - match: \basin\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/b877a71:
+  - match: \bacos\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/37047bf:
+  - match: \bcontrol\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/d3ee65e:
+  - match: \benable\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/f068836:
+  - match: \battach\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/2753e08:
+  - match: '>'
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/4c852e2:
+  - match: <
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/776c53d:
+  - match: \bxor\b
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/2472d37:
+  - match: \|
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/83d22ef:
+  - match: \&
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/254c999:
+  - match: '@'
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/8c9aa79:
+  - match: '%'
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/0044f54:
+  - match: /
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/7bc0a56:
+  - match: \*
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/dc035e3:
+  - match: \bprefix\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/d5abb93:
+  - match: \bmem\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/d7508c5:
+  - match: '!'
+    scope: constant.language.faust
+    pop: 2
+  - include: fail!
+  /T/2043336:
+  - match: _
+    scope: constant.language.faust
+    pop: 2
+  - include: fail!
+  primitive/83508ff@0,7,54:
+  - match: ''
+    branch_point: primitive/83508ff@0,7,54
+    branch: ['primitive/83508ff@0,7,54!0', 'primitive/83508ff@0,7,54!7', 'primitive/83508ff@0,7,54!54']
+  primitive/83508ff@0,7,54!54:
+  - match: ''
+    set: [pop3!, 'primitive/83508ff@0,7,54@fail!', primitive/83508ff@follow!, pop2!,
+      name-or-func-call/ae9127c, pop2!, /opt//opt/872a3f8]
+  primitive/83508ff@follow!:
+  - match: (?=!=)
+    pop: 2
+  - match: (?=%)
+    pop: 2
+  - match: (?=')
+    pop: 2
+  - match: (?=,)
+    pop: 2
+  - match: (?=/)
+    pop: 2
+  - match: (?=:(?!>)(?<!<))
+    pop: 2
+  - match: (?=:>)
+    pop: 2
+  - match: (?=;)
+    pop: 2
+  - match: (?=<)
+    pop: 2
+  - match: (?=<:)
+    pop: 2
+  - match: (?=<<)
+    pop: 2
+  - match: (?=<=)
+    pop: 2
+  - match: (?===)
+    pop: 2
+  - match: (?=>)
+    pop: 2
+  - match: (?=>=)
+    pop: 2
+  - match: (?=>>)
+    pop: 2
+  - match: (?=@)
+    pop: 2
+  - match: (?=\&)
+    pop: 2
+  - match: (?=\()
+    pop: 2
+  - match: (?=\))
+    pop: 2
+  - match: (?=\*)
+    pop: 2
+  - match: (?=\+)
+    pop: 2
+  - match: (?=\-)
+    pop: 2
+  - match: (?=\.)
+    pop: 2
+  - match: (?=\^)
+    pop: 2
+  - match: (?=\bletrec\b)
+    pop: 2
+  - match: (?=\bwith\b)
+    pop: 2
+  - match: (?=\bxor\b)
+    pop: 2
+  - match: (?=\|)
+    pop: 2
+  - match: (?=\~)
+    pop: 2
+  - include: fail!
+  primitive/83508ff@0,7,54@fail!:
+  - match: ''
+    fail: primitive/83508ff@0,7,54
+  primitive/83508ff@0,7,54!7:
+  - match: ''
+    set: [pop3!, 'primitive/83508ff@0,7,54@fail!', primitive/83508ff@follow!, pop2!,
+      /T/ab480f8]
+  /T/ab480f8:
+  - match: \-
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  primitive/83508ff@0,7,54!0:
+  - match: ''
+    set: [pop3!, 'primitive/83508ff@0,7,54@fail!', primitive/83508ff@follow!, pop2!,
+      /T/c8f53eb, pop2!, /opt//opt/f710421]
+  primitive/83508ff@0,6:
+  - match: ''
+    branch_point: primitive/83508ff@0,6
+    branch: ['primitive/83508ff@0,6!0', 'primitive/83508ff@0,6!6']
+  primitive/83508ff@0,6!6:
+  - match: ''
+    set: [pop3!, 'primitive/83508ff@0,6@fail!', primitive/83508ff@follow!, pop2!,
+      /T/0cbb580]
+  /T/0cbb580:
+  - match: \+
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  primitive/83508ff@0,6@fail!:
+  - match: ''
+    fail: primitive/83508ff@0,6
+  primitive/83508ff@0,6!0:
+  - match: ''
+    set: [pop3!, 'primitive/83508ff@0,6@fail!', primitive/83508ff@follow!, pop2!,
+      /T/c8f53eb, pop2!, /opt//opt/f710421]
+  /T/01e188d:
+  - match: '!='
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/7ae7eb0:
+  - match: ==
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/2811b39:
+  - match: '>='
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/dae556c:
+  - match: <=
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/459f5e7:
+  - match: '>>'
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/a716319:
+  - match: '<<'
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /*-0/infixexp-1/0115f85:
+  - match: (?=!=)
+    pop: 2
+  - match: (?=<<)
+    pop: 2
+  - match: (?=<=)
+    pop: 2
+  - match: (?===)
+    pop: 2
+  - match: (?=>=)
+    pop: 2
+  - match: (?=>>)
+    pop: 2
+  - match: (?=%)
+    pop: 2
+  - match: (?=,)
+    pop: 2
+  - match: (?=/)
+    pop: 2
+  - match: (?=:(?!>)(?<!<))
+    pop: 2
+  - match: (?=:>)
+    pop: 2
+  - match: (?=;)
+    pop: 2
+  - match: (?=<)
+    pop: 2
+  - match: (?=<:)
+    pop: 2
+  - match: (?=>)
+    pop: 2
+  - match: (?=@)
+    pop: 2
+  - match: (?=\&)
+    pop: 2
+  - match: (?=\))
+    pop: 2
+  - match: (?=\*)
+    pop: 2
+  - match: (?=\+)
+    pop: 2
+  - match: (?=\-)
+    pop: 2
+  - match: (?=\^)
+    pop: 2
+  - match: (?=\bletrec\b)
+    pop: 2
+  - match: (?=\bwith\b)
+    pop: 2
+  - match: (?=\bxor\b)
+    pop: 2
+  - match: (?=\|)
+    pop: 2
+  - match: (?=\~)
+    pop: 2
+  - match: (?=')
+    push: [pop2!, /alt-0//*-0/infixexp-1/0115f85]
+  - match: (?=\()
+    push: [pop2!, /alt-0//*-0/infixexp-1/0115f85]
+  - match: (?=\.)
+    push: [pop2!, /alt-0//*-0/infixexp-1/0115f85]
+  - include: fail!
+  /alt-0//*-0/infixexp-1/0115f85:
+  - match: (?=')
+    set: /T/38fdd7d
+  - match: (?=\.)
+    set: [name-or-func-call/ae9127c, pop2!, /T/7ba0cff]
+  - match: (?=\()
+    set: arglist@wrap_meta!
+  - include: fail!
+  /T/7ba0cff:
+  - match: \.
+    scope: punctuation.accessor.dot.faust
+    pop: 2
+  - include: fail!
+  /T/38fdd7d:
+  - match: "'"
+    pop: 2
+  - include: fail!
+  /*-0/infixexp/92d36e8:
+  - match: (?=!=)
+    push: [pop2!, /alt-0//*-0/infixexp/92d36e8]
+  - match: (?=<<)
+    push: [pop2!, /alt-0//*-0/infixexp/92d36e8]
+  - match: (?=<=)
+    push: [pop2!, /alt-0//*-0/infixexp/92d36e8]
+  - match: (?===)
+    push: [pop2!, /alt-0//*-0/infixexp/92d36e8]
+  - match: (?=>=)
+    push: [pop2!, /alt-0//*-0/infixexp/92d36e8]
+  - match: (?=>>)
+    push: [pop2!, /alt-0//*-0/infixexp/92d36e8]
+  - match: (?=,)
+    pop: 2
+  - match: (?=:(?!>)(?<!<))
+    pop: 2
+  - match: (?=:>)
+    pop: 2
+  - match: (?=;)
+    pop: 2
+  - match: (?=<:)
+    pop: 2
+  - match: (?=\))
+    pop: 2
+  - match: (?=\bletrec\b)
+    pop: 2
+  - match: (?=\bwith\b)
+    pop: 2
+  - match: (?=\~)
+    pop: 2
+  - match: (?=%)
+    push: [pop2!, /alt-0//*-0/infixexp/92d36e8]
+  - match: (?=/)
+    push: [pop2!, /alt-0//*-0/infixexp/92d36e8]
+  - match: (?=<)
+    push: [pop2!, /alt-0//*-0/infixexp/92d36e8]
+  - match: (?=>)
+    push: [pop2!, /alt-0//*-0/infixexp/92d36e8]
+  - match: (?=@)
+    push: [pop2!, /alt-0//*-0/infixexp/92d36e8]
+  - match: (?=\&)
+    push: [pop2!, /alt-0//*-0/infixexp/92d36e8]
+  - match: (?=\*)
+    push: [pop2!, /alt-0//*-0/infixexp/92d36e8]
+  - match: (?=\+)
+    push: [pop2!, /alt-0//*-0/infixexp/92d36e8]
+  - match: (?=\-)
+    push: [pop2!, /alt-0//*-0/infixexp/92d36e8]
+  - match: (?=\^)
+    push: [pop2!, /alt-0//*-0/infixexp/92d36e8]
+  - match: (?=\bxor\b)
+    push: [pop2!, /alt-0//*-0/infixexp/92d36e8]
+  - match: (?=\|)
+    push: [pop2!, /alt-0//*-0/infixexp/92d36e8]
+  - include: fail!
+  /alt-0//*-0/infixexp/92d36e8:
+  - match: ''
+    set: [infixexp-1/0115f85, pop2!, /alt-0//alt-0//*-0/infixexp/92d36e8]
+  /alt-0//alt-0//*-0/infixexp/92d36e8:
+  - match: (?=<=)
+    set: /T/7f9fc2a
+  - match: (?===)
+    set: /T/4772198
+  - match: (?=>=)
+    set: /T/641f031
+  - match: (?=!=)
+    set: /T/36d66dd
+  - match: (?=<<)
+    set: /T/2a7a853
+  - match: (?=>>)
+    set: /T/dfd0ccd
+  - match: (?=<)
+    set: /T/4c852e2
+  - match: (?=>)
+    set: /T/2753e08
+  - match: (?=\+)
+    set: /T/0cbb580
+  - match: (?=\-)
+    set: /T/ab480f8
+  - match: (?=\|)
+    set: /T/2472d37
+  - match: (?=\*)
+    set: /T/7bc0a56
+  - match: (?=/)
+    set: /T/0044f54
+  - match: (?=%)
+    set: /T/8c9aa79
+  - match: (?=\&)
+    set: /T/83d22ef
+  - match: (?=\bxor\b)
+    set: /T/f208c17
+  - match: (?=\^)
+    set: /T/5fca224
+  - match: (?=@)
+    set: /T/254c999
+  - include: fail!
+  /T/5fca224:
+  - match: \^
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/f208c17:
+  - match: \bxor\b
+    scope: keyword.operator.word.faust
+    pop: 2
+  - include: fail!
+  /T/dfd0ccd:
+  - match: '>>'
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/2a7a853:
+  - match: '<<'
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/36d66dd:
+  - match: '!='
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/641f031:
+  - match: '>='
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/4772198:
+  - match: ==
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/7f9fc2a:
+  - match: <=
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /*-0/argument/477f598:
+  - match: (?=,)
+    pop: 2
+  - match: (?=\))
+    pop: 2
+  - match: (?=:(?!>)(?<!<))
+    push: [pop2!, /alt-0//*-0/argument/477f598]
+  - match: (?=:>)
+    push: [pop2!, /alt-0//*-0/argument/477f598]
+  - match: (?=<:)
+    push: [pop2!, /alt-0//*-0/argument/477f598]
+  - match: (?=\~)
+    push: [pop2!, /alt-0//*-0/argument/477f598]
+  - include: fail!
+  /alt-0//*-0/argument/477f598:
+  - match: ''
+    set: [infixexp/92d36e8, pop2!, /alt-0//alt-0//*-0/argument/477f598]
+  /alt-0//alt-0//*-0/argument/477f598:
+  - match: (?=<:)
+    set: /T/9a22c65
+  - match: (?=:>)
+    set: /T/b42b84b
+  - match: (?=:(?!>)(?<!<))
+    set: /T/b95dfcd
+  - match: (?=\~)
+    set: /T/27a6fd6
+  - include: fail!
+  /*-0/arg-param-list/04fd23e:
+  - match: (?=\))
+    set: /T/b038103
+  - match: (?=,)
+    push: [pop2!, /alt-0//*-0/arg-param-list/04fd23e]
+  - include: fail!
+  /alt-0//*-0/arg-param-list/04fd23e:
+  - match: ''
+    set: [typical-argument, pop2!, /T/04cc951]
+  /T/b038103:
+  - match: \)
+    scope: punctuation.section.arguments.end.faust
+    pop: 2
+  - include: fail!
+  arglist@meta!:
+  - meta_scope: meta.function-call.arguments.faust
+  - match: ''
+    pop: 2
+  name-or-func-call/7ad33d6@0,1@fail!:
+  - match: ''
+    fail: name-or-func-call/7ad33d6@0,1
+  route/a2cff56:
+  - match: ''
+    set: [route-body/0543e0b@wrap_meta!, pop2!, route-lit/c9f6b2e]
+  route-lit/c9f6b2e:
+  - match: ''
+    set: /T/ad229eb
+  /T/ad229eb:
+  - match: \broute\b
+    scope: invalid.illegal.faust
+    pop: 2
+  - include: fail!
+  route-body/0543e0b@wrap_meta!:
+  - match: ''
+    set: [route-body/0543e0b@meta!, pop2!, route-body/0543e0b]
+  route-body/0543e0b:
+  - match: ''
+    set: [/T/6ac006f, pop2!, expression/5784718, pop2!, /T/04cc951, pop2!, argument/107a877,
+      pop2!, /T/04cc951, pop2!, argument/107a877, pop2!, /T/d277520]
+  expression/5784718:
+  - match: ''
+    set: [/*-0/expression/5784718, pop2!, expression-1/f7f0973]
+  expression-1/f7f0973:
+  - match: ''
+    set: [/*-0/expression-1/f7f0973, pop2!, infixexp/a2c911a]
+  /*-0/expression-1/f7f0973:
+  - match: (?=,)
+    pop: 2
+  - match: (?=:(?!>)(?<!<))
+    pop: 2
+  - match: (?=:>)
+    pop: 2
+  - match: (?=<:)
+    pop: 2
+  - match: (?=\))
+    pop: 2
+  - match: (?=\~)
+    pop: 2
+  - match: (?=\bletrec\b)
+    push: [pop2!, /alt-0//*-0/expression-1/f7f0973]
+  - match: (?=\bwith\b)
+    push: [pop2!, /alt-0//*-0/expression-1/f7f0973]
+  - include: fail!
+  /alt-0//*-0/expression-1/f7f0973:
+  - match: (?=\bwith\b)
+    set: [with-body@wrap_meta!, pop2!, /T/a8f5f8d]
+  - match: (?=\bletrec\b)
+    set: [letrec-body@wrap_meta!, pop2!, /T/f7afc5b]
+  - include: fail!
+  /*-0/expression/5784718:
+  - match: (?=\))
+    pop: 2
+  - match: (?=,)
+    push: [pop2!, /alt-0//*-0/expression/5784718]
+  - match: (?=:(?!>)(?<!<))
+    push: [pop2!, /alt-0//*-0/expression/5784718]
+  - match: (?=:>)
+    push: [pop2!, /alt-0//*-0/expression/5784718]
+  - match: (?=<:)
+    push: [pop2!, /alt-0//*-0/expression/5784718]
+  - match: (?=\~)
+    push: [pop2!, /alt-0//*-0/expression/5784718]
+  - include: fail!
+  /alt-0//*-0/expression/5784718:
+  - match: ''
+    set: [expression-1/f7f0973, pop2!, /alt-0//alt-0//*-0/expression/5784718]
+  /alt-0//alt-0//*-0/expression/5784718:
+  - match: (?=<:)
+    set: /T/9a22c65
+  - match: (?=:>)
+    set: /T/b42b84b
+  - match: (?=:(?!>)(?<!<))
+    set: /T/b95dfcd
+  - match: (?=,)
+    set: /T/060b323
+  - match: (?=\~)
+    set: /T/27a6fd6
+  - include: fail!
+  route-body/0543e0b@meta!:
+  - meta_scope: meta.function-call.arguments.faust
+  - match: ''
+    pop: 2
+  paren-expr/f6b5b6c@wrap_meta!:
+  - match: ''
+    set: [paren-expr/f6b5b6c@meta!, pop2!, paren-expr/f6b5b6c]
+  paren-expr/f6b5b6c:
+  - match: ''
+    set: [/T/8715cc4, pop2!, expression/5784718, pop2!, /T/2405f67]
+  paren-expr/f6b5b6c@meta!:
+  - meta_scope: meta.group.faust
+  - match: ''
+    pop: 2
+  primitive/aa92c0e@0,7,54:
+  - match: ''
+    branch_point: primitive/aa92c0e@0,7,54
+    branch: ['primitive/aa92c0e@0,7,54!0', 'primitive/aa92c0e@0,7,54!7', 'primitive/aa92c0e@0,7,54!54']
+  primitive/aa92c0e@0,7,54!54:
+  - match: ''
+    set: [pop3!, 'primitive/aa92c0e@0,7,54@fail!', primitive/aa92c0e@follow!, pop2!,
+      name-or-func-call/7ad33d6, pop2!, /opt//opt/872a3f8]
+  primitive/aa92c0e@follow!:
+  - match: (?=!=)
+    pop: 2
+  - match: (?=%)
+    pop: 2
+  - match: (?=')
+    pop: 2
+  - match: (?=,)
+    pop: 2
+  - match: (?=/)
+    pop: 2
+  - match: (?=:(?!>)(?<!<))
+    pop: 2
+  - match: (?=:>)
+    pop: 2
+  - match: (?=<)
+    pop: 2
+  - match: (?=<:)
+    pop: 2
+  - match: (?=<<)
+    pop: 2
+  - match: (?=<=)
+    pop: 2
+  - match: (?===)
+    pop: 2
+  - match: (?=>)
+    pop: 2
+  - match: (?=>=)
+    pop: 2
+  - match: (?=>>)
+    pop: 2
+  - match: (?=@)
+    pop: 2
+  - match: (?=\&)
+    pop: 2
+  - match: (?=\()
+    pop: 2
+  - match: (?=\))
+    pop: 2
+  - match: (?=\*)
+    pop: 2
+  - match: (?=\+)
+    pop: 2
+  - match: (?=\-)
+    pop: 2
+  - match: (?=\.)
+    pop: 2
+  - match: (?=\^)
+    pop: 2
+  - match: (?=\bletrec\b)
+    pop: 2
+  - match: (?=\bwith\b)
+    pop: 2
+  - match: (?=\bxor\b)
+    pop: 2
+  - match: (?=\|)
+    pop: 2
+  - match: (?=\~)
+    pop: 2
+  - include: fail!
+  primitive/aa92c0e@0,7,54@fail!:
+  - match: ''
+    fail: primitive/aa92c0e@0,7,54
+  primitive/aa92c0e@0,7,54!7:
+  - match: ''
+    set: [pop3!, 'primitive/aa92c0e@0,7,54@fail!', primitive/aa92c0e@follow!, pop2!,
+      /T/ab480f8]
+  primitive/aa92c0e@0,7,54!0:
+  - match: ''
+    set: [pop3!, 'primitive/aa92c0e@0,7,54@fail!', primitive/aa92c0e@follow!, pop2!,
+      /T/c8f53eb, pop2!, /opt//opt/f710421]
+  primitive/aa92c0e@0,6:
+  - match: ''
+    branch_point: primitive/aa92c0e@0,6
+    branch: ['primitive/aa92c0e@0,6!0', 'primitive/aa92c0e@0,6!6']
+  primitive/aa92c0e@0,6!6:
+  - match: ''
+    set: [pop3!, 'primitive/aa92c0e@0,6@fail!', primitive/aa92c0e@follow!, pop2!,
+      /T/0cbb580]
+  primitive/aa92c0e@0,6@fail!:
+  - match: ''
+    fail: primitive/aa92c0e@0,6
+  primitive/aa92c0e@0,6!0:
+  - match: ''
+    set: [pop3!, 'primitive/aa92c0e@0,6@fail!', primitive/aa92c0e@follow!, pop2!,
+      /T/c8f53eb, pop2!, /opt//opt/f710421]
+  /*-0/infixexp-1/052aa16:
+  - match: (?=!=)
+    pop: 2
+  - match: (?=<<)
+    pop: 2
+  - match: (?=<=)
+    pop: 2
+  - match: (?===)
+    pop: 2
+  - match: (?=>=)
+    pop: 2
+  - match: (?=>>)
+    pop: 2
+  - match: (?=%)
+    pop: 2
+  - match: (?=,)
+    pop: 2
+  - match: (?=/)
+    pop: 2
+  - match: (?=:(?!>)(?<!<))
+    pop: 2
+  - match: (?=:>)
+    pop: 2
+  - match: (?=<)
+    pop: 2
+  - match: (?=<:)
+    pop: 2
+  - match: (?=>)
+    pop: 2
+  - match: (?=@)
+    pop: 2
+  - match: (?=\&)
+    pop: 2
+  - match: (?=\))
+    pop: 2
+  - match: (?=\*)
+    pop: 2
+  - match: (?=\+)
+    pop: 2
+  - match: (?=\-)
+    pop: 2
+  - match: (?=\^)
+    pop: 2
+  - match: (?=\bletrec\b)
+    pop: 2
+  - match: (?=\bwith\b)
+    pop: 2
+  - match: (?=\bxor\b)
+    pop: 2
+  - match: (?=\|)
+    pop: 2
+  - match: (?=\~)
+    pop: 2
+  - match: (?=')
+    push: [pop2!, /alt-0//*-0/infixexp-1/052aa16]
+  - match: (?=\()
+    push: [pop2!, /alt-0//*-0/infixexp-1/052aa16]
+  - match: (?=\.)
+    push: [pop2!, /alt-0//*-0/infixexp-1/052aa16]
+  - include: fail!
+  /alt-0//*-0/infixexp-1/052aa16:
+  - match: (?=')
+    set: /T/38fdd7d
+  - match: (?=\.)
+    set: [name-or-func-call/7ad33d6, pop2!, /T/7ba0cff]
+  - match: (?=\()
+    set: arglist@wrap_meta!
+  - include: fail!
+  /*-0/infixexp/a2c911a:
+  - match: (?=!=)
+    push: [pop2!, /alt-0//*-0/infixexp/a2c911a]
+  - match: (?=<<)
+    push: [pop2!, /alt-0//*-0/infixexp/a2c911a]
+  - match: (?=<=)
+    push: [pop2!, /alt-0//*-0/infixexp/a2c911a]
+  - match: (?===)
+    push: [pop2!, /alt-0//*-0/infixexp/a2c911a]
+  - match: (?=>=)
+    push: [pop2!, /alt-0//*-0/infixexp/a2c911a]
+  - match: (?=>>)
+    push: [pop2!, /alt-0//*-0/infixexp/a2c911a]
+  - match: (?=,)
+    pop: 2
+  - match: (?=:(?!>)(?<!<))
+    pop: 2
+  - match: (?=:>)
+    pop: 2
+  - match: (?=<:)
+    pop: 2
+  - match: (?=\))
+    pop: 2
+  - match: (?=\bletrec\b)
+    pop: 2
+  - match: (?=\bwith\b)
+    pop: 2
+  - match: (?=\~)
+    pop: 2
+  - match: (?=%)
+    push: [pop2!, /alt-0//*-0/infixexp/a2c911a]
+  - match: (?=/)
+    push: [pop2!, /alt-0//*-0/infixexp/a2c911a]
+  - match: (?=<)
+    push: [pop2!, /alt-0//*-0/infixexp/a2c911a]
+  - match: (?=>)
+    push: [pop2!, /alt-0//*-0/infixexp/a2c911a]
+  - match: (?=@)
+    push: [pop2!, /alt-0//*-0/infixexp/a2c911a]
+  - match: (?=\&)
+    push: [pop2!, /alt-0//*-0/infixexp/a2c911a]
+  - match: (?=\*)
+    push: [pop2!, /alt-0//*-0/infixexp/a2c911a]
+  - match: (?=\+)
+    push: [pop2!, /alt-0//*-0/infixexp/a2c911a]
+  - match: (?=\-)
+    push: [pop2!, /alt-0//*-0/infixexp/a2c911a]
+  - match: (?=\^)
+    push: [pop2!, /alt-0//*-0/infixexp/a2c911a]
+  - match: (?=\bxor\b)
+    push: [pop2!, /alt-0//*-0/infixexp/a2c911a]
+  - match: (?=\|)
+    push: [pop2!, /alt-0//*-0/infixexp/a2c911a]
+  - include: fail!
+  /alt-0//*-0/infixexp/a2c911a:
+  - match: ''
+    set: [infixexp-1/052aa16, pop2!, /alt-0//alt-0//*-0/infixexp/a2c911a]
+  /alt-0//alt-0//*-0/infixexp/a2c911a:
+  - match: (?=<=)
+    set: /T/7f9fc2a
+  - match: (?===)
+    set: /T/4772198
+  - match: (?=>=)
+    set: /T/641f031
+  - match: (?=!=)
+    set: /T/36d66dd
+  - match: (?=<<)
+    set: /T/2a7a853
+  - match: (?=>>)
+    set: /T/dfd0ccd
+  - match: (?=<)
+    set: /T/4c852e2
+  - match: (?=>)
+    set: /T/2753e08
+  - match: (?=\+)
+    set: /T/0cbb580
+  - match: (?=\-)
+    set: /T/ab480f8
+  - match: (?=\|)
+    set: /T/2472d37
+  - match: (?=\*)
+    set: /T/7bc0a56
+  - match: (?=/)
+    set: /T/0044f54
+  - match: (?=%)
+    set: /T/8c9aa79
+  - match: (?=\&)
+    set: /T/83d22ef
+  - match: (?=\bxor\b)
+    set: /T/f208c17
+  - match: (?=\^)
+    set: /T/5fca224
+  - match: (?=@)
+    set: /T/254c999
+  - include: fail!
+  /*-0/argument/107a877:
+  - match: (?=,)
+    pop: 2
+  - match: (?=\))
+    pop: 2
+  - match: (?=:(?!>)(?<!<))
+    push: [pop2!, /alt-0//*-0/argument/107a877]
+  - match: (?=:>)
+    push: [pop2!, /alt-0//*-0/argument/107a877]
+  - match: (?=<:)
+    push: [pop2!, /alt-0//*-0/argument/107a877]
+  - match: (?=\~)
+    push: [pop2!, /alt-0//*-0/argument/107a877]
+  - include: fail!
+  /alt-0//*-0/argument/107a877:
+  - match: ''
+    set: [infixexp/a2c911a, pop2!, /alt-0//alt-0//*-0/argument/107a877]
+  /alt-0//alt-0//*-0/argument/107a877:
+  - match: (?=<:)
+    set: /T/9a22c65
+  - match: (?=:>)
+    set: /T/b42b84b
+  - match: (?=:(?!>)(?<!<))
+    set: /T/b95dfcd
+  - match: (?=\~)
+    set: /T/27a6fd6
+  - include: fail!
+  /*-0/arg-param-list/ada6e9a:
+  - match: (?=\))
+    set: /T/b038103
+  - match: (?=,)
+    push: [pop2!, /alt-0//*-0/arg-param-list/ada6e9a]
+  - include: fail!
+  /alt-0//*-0/arg-param-list/ada6e9a:
+  - match: ''
+    set: [argument/107a877, pop2!, /T/04cc951]
+  lambda-params@meta!:
+  - meta_scope: meta.function-call.arguments.faust
+  - match: ''
+    pop: 2
+  docs@wrap_meta!:
+  - match: ''
+    set: [docs@meta!, pop2!, docs]
+  docs:
+  - match: ''
+    set: /T/da553ce
+  /T/da553ce:
+  - match: (?=<mdoc>)
+    embed: scope:text.xml
+    escape: (?<=\<\/mdoc\>)
+    pop: 2
+  - include: fail!
+  docs@meta!:
+  - meta_scope: meta.documentation.faust
+  - match: ''
+    pop: 2
+  /T/f626522:
+  - match: \bdeclare\b
+    scope: keyword.control.declare.faust
+    pop: 2
+  - include: fail!
+  /alt-0/statement:
+  - match: (?=_?[a-zA-Z][_a-zA-Z0-9]*)
+    set: /alt-0/statement@0,1
+  - include: fail!
+  /alt-0/statement@0,1:
+  - match: ''
+    branch_point: /alt-0/statement@0,1
+    branch: ['/alt-0/statement@0,1!0', '/alt-0/statement@0,1!1']
+  /alt-0/statement@0,1!1:
+  - match: ''
+    set: [pop3!, pop3!, /alt-0/statement@follow!, pop2!, /T/d968991, pop2!, /T/4ed32c5]
+  /T/4ed32c5:
+  - match: _?[a-zA-Z][_a-zA-Z0-9]*
+    scope: meta.declare.function variable.function.faust
+    pop: 2
+  - include: fail!
+  /T/d968991:
+  - match: _?[a-zA-Z][_a-zA-Z0-9]*
+    scope: meta.declare.key entity.name.faust
+    pop: 2
+  - include: fail!
+  /alt-0/statement@follow!:
+  - match: (?=")
+    pop: 2
+  - include: fail!
+  /alt-0/statement@0,1!0:
+  - match: ''
+    set: [pop3!, '/alt-0/statement@0,1@fail!', /alt-0/statement@follow!, pop2!, /T/d968991]
+  /alt-0/statement@0,1@fail!:
+  - match: ''
+    fail: /alt-0/statement@0,1
+  /T/5109338:
+  - match: \bimport\b
+    scope: keyword.control.import.faust
+    pop: 2
+  - include: fail!
+  import-arg-list@wrap_meta!:
+  - match: ''
+    set: [import-arg-list@meta!, pop2!, import-arg-list]
+  import-arg-list:
+  - match: ''
+    set: [/T/8715cc4, pop2!, decl-string@wrap_meta!, pop2!, /T/2405f67]
+  import-arg-list@meta!:
+  - meta_scope: meta.import.arguments.faust
+  - match: ''
+    pop: 2
