@@ -244,12 +244,18 @@ contexts:
   - match: (?==)
     pop: 2
   - match: (?=\()
-    set: lambda-params@wrap_meta!
+    set: paramlist@wrap_meta!
   - include: fail!
-  lambda-params@wrap_meta!:
+  paramlist@wrap_meta!:
   - match: ''
-    set: [lambda-params@meta!, pop2!, lambda-params]
-  lambda-params:
+    set: [paramlist@meta!, pop2!, paramlist]
+  paramlist:
+  - match: ''
+    set: arg-param-list/ada6e9a@wrap_meta!
+  arg-param-list/ada6e9a@wrap_meta!:
+  - match: ''
+    set: [arg-param-list/ada6e9a@meta!, pop2!, arg-param-list/ada6e9a]
+  arg-param-list/ada6e9a:
   - match: ''
     set: [/*-0/arg-param-list/ada6e9a, pop2!, argument/107a877, pop2!, /T/e99570e]
   /T/e99570e:
@@ -523,6 +529,12 @@ contexts:
   - match: ''
     set: [arglist@meta!, pop2!, arglist]
   arglist:
+  - match: ''
+    set: arg-param-list/04fd23e@wrap_meta!
+  arg-param-list/04fd23e@wrap_meta!:
+  - match: ''
+    set: [arg-param-list/04fd23e@meta!, pop2!, arg-param-list/04fd23e]
+  arg-param-list/04fd23e:
   - match: ''
     set: [/*-0/arg-param-list/04fd23e, pop2!, typical-argument, pop2!, /T/e99570e]
   typical-argument:
@@ -1004,13 +1016,13 @@ contexts:
     set: [ui-args-1@meta!, pop2!, ui-args-1]
   ui-args-1:
   - match: ''
-    set: [/T/8715cc4, pop2!, typical-argument, pop2!, /T/04cc951, pop2!, decl-string@wrap_meta!,
+    set: [/T/8715cc4, pop2!, typical-argument, pop2!, /T/04cc951, pop2!, string@wrap_meta!,
       pop2!, /T/2405f67]
-  decl-string@wrap_meta!:
+  string@wrap_meta!:
   - meta_include_prototype: false
   - match: ''
-    set: [decl-string@meta!, pop2!, decl-string]
-  decl-string:
+    set: [string@meta!, pop2!, string]
+  string:
   - meta_include_prototype: false
   - match: ''
     set: [^/*-0/string, pop2!, ^/T/ef756ef]
@@ -1100,7 +1112,7 @@ contexts:
   - meta_include_prototype: false
   - match: ''
     fail: /*-0/string@p!@0
-  decl-string@meta!:
+  string@meta!:
   - meta_include_prototype: false
   - meta_scope: string.quoted.faust
   - match: ''
@@ -1124,7 +1136,7 @@ contexts:
   ui-args-2:
   - match: ''
     set: [/T/8715cc4, pop2!, typical-argument, pop2!, /T/04cc951, pop2!, typical-argument,
-      pop2!, /T/04cc951, pop2!, decl-string@wrap_meta!, pop2!, /T/2405f67]
+      pop2!, /T/04cc951, pop2!, string@wrap_meta!, pop2!, /T/2405f67]
   ui-args-2@meta!:
   - meta_scope: meta.function-call.arguments.faust
   - match: ''
@@ -1144,7 +1156,7 @@ contexts:
     set: [ui-args-e@meta!, pop2!, ui-args-e]
   ui-args-e:
   - match: ''
-    set: [/T/8715cc4, pop2!, typical-expression, pop2!, /T/04cc951, pop2!, decl-string@wrap_meta!,
+    set: [/T/8715cc4, pop2!, typical-expression, pop2!, /T/04cc951, pop2!, string@wrap_meta!,
       pop2!, /T/2405f67]
   ui-args-e@meta!:
   - meta_scope: meta.function-call.arguments.faust
@@ -1172,7 +1184,7 @@ contexts:
   - match: ''
     set: [/T/8715cc4, pop2!, typical-argument, pop2!, /T/04cc951, pop2!, typical-argument,
       pop2!, /T/04cc951, pop2!, typical-argument, pop2!, /T/04cc951, pop2!, typical-argument,
-      pop2!, /T/04cc951, pop2!, decl-string@wrap_meta!, pop2!, /T/2405f67]
+      pop2!, /T/04cc951, pop2!, string@wrap_meta!, pop2!, /T/2405f67]
   ui-args-4@meta!:
   - meta_scope: meta.function-call.arguments.faust
   - match: ''
@@ -1197,7 +1209,7 @@ contexts:
     set: [ui-args-0@meta!, pop2!, ui-args-0]
   ui-args-0:
   - match: ''
-    set: [/T/8715cc4, pop2!, decl-string@wrap_meta!, pop2!, /T/2405f67]
+    set: [/T/8715cc4, pop2!, string@wrap_meta!, pop2!, /T/2405f67]
   ui-args-0@meta!:
   - meta_scope: meta.function-call.arguments.faust
   - match: ''
@@ -1348,7 +1360,7 @@ contexts:
     set: [library-body@meta!, pop2!, library-body]
   library-body:
   - match: ''
-    set: [/T/6ac006f, pop2!, decl-string@wrap_meta!, pop2!, /T/d277520]
+    set: [/T/6ac006f, pop2!, string@wrap_meta!, pop2!, /T/d277520]
   library-body@meta!:
   - meta_scope: meta.group.library.faust
   - match: ''
@@ -1363,7 +1375,7 @@ contexts:
     set: [component-body@meta!, pop2!, component-body]
   component-body:
   - match: ''
-    set: [/T/6ac006f, pop2!, decl-string@wrap_meta!, pop2!, /T/d277520]
+    set: [/T/6ac006f, pop2!, string@wrap_meta!, pop2!, /T/d277520]
   component-body@meta!:
   - meta_scope: meta.group.component.faust
   - match: ''
@@ -1430,7 +1442,7 @@ contexts:
     set: [ffunction-body@meta!, pop2!, ffunction-body]
   ffunction-body:
   - match: ''
-    set: [/T/6ac006f, pop2!, decl-string@wrap_meta!, pop2!, /T/04cc951, pop2!, fstring,
+    set: [/T/6ac006f, pop2!, string@wrap_meta!, pop2!, /T/04cc951, pop2!, fstring,
       pop2!, /T/04cc951, pop2!, signature, pop2!, /T/d277520]
   signature:
   - match: ''
@@ -1511,7 +1523,7 @@ contexts:
   - include: fail!
   /alt-0//*-0/rulelist:
   - match: ''
-    set: [/T/dd13094, pop2!, typical-expression, pop2!, /T/d226d83, pop2!, lambda-params@wrap_meta!]
+    set: [/T/dd13094, pop2!, typical-expression, pop2!, /T/d226d83, pop2!, paramlist@wrap_meta!]
   /T/d226d83:
   - match: =>
     scope: keyword.operator.faust
@@ -1532,6 +1544,16 @@ contexts:
   lambda-defn:
   - match: ''
     set: [paren-expr/b91d3ee@wrap_meta!, pop2!, /T/8562177, pop2!, lambda-params@wrap_meta!]
+  lambda-params@wrap_meta!:
+  - match: ''
+    set: [lambda-params@meta!, pop2!, lambda-params]
+  lambda-params:
+  - match: ''
+    set: paramlist@wrap_meta!
+  lambda-params@meta!:
+  - meta_scope: meta.function.lambda.parameters.faust
+  - match: ''
+    pop: 2
   /T/8562177:
   - match: \.
     pop: 2
@@ -2153,6 +2175,10 @@ contexts:
     scope: punctuation.section.arguments.end.faust
     pop: 2
   - include: fail!
+  arg-param-list/04fd23e@meta!:
+  - meta_scope: meta.function-call.arguments.faust
+  - match: ''
+    pop: 2
   arglist@meta!:
   - meta_scope: meta.function-call.arguments.faust
   - match: ''
@@ -2544,8 +2570,12 @@ contexts:
   /alt-0//*-0/arg-param-list/ada6e9a:
   - match: ''
     set: [argument/107a877, pop2!, /T/04cc951]
-  lambda-params@meta!:
+  arg-param-list/ada6e9a@meta!:
   - meta_scope: meta.function-call.arguments.faust
+  - match: ''
+    pop: 2
+  paramlist@meta!:
+  - meta_scope: meta.function.parameters.faust
   - match: ''
     pop: 2
   docs@wrap_meta!:
@@ -2600,6 +2630,16 @@ contexts:
   /alt-0/statement@0,1@fail!:
   - match: ''
     fail: /alt-0/statement@0,1
+  decl-string@wrap_meta!:
+  - match: ''
+    set: [decl-string@meta!, pop2!, decl-string]
+  decl-string:
+  - match: ''
+    set: string@wrap_meta!
+  decl-string@meta!:
+  - meta_scope: meta.declare.value.faust
+  - match: ''
+    pop: 2
   /T/5109338:
   - match: \bimport\b
     scope: keyword.control.import.faust
@@ -2610,7 +2650,7 @@ contexts:
     set: [import-arg-list@meta!, pop2!, import-arg-list]
   import-arg-list:
   - match: ''
-    set: [/T/8715cc4, pop2!, decl-string@wrap_meta!, pop2!, /T/2405f67]
+    set: [/T/8715cc4, pop2!, string@wrap_meta!, pop2!, /T/2405f67]
   import-arg-list@meta!:
   - meta_scope: meta.import.arguments.faust
   - match: ''

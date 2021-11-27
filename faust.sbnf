@@ -69,16 +69,16 @@ lambda-params{meta.function.lambda.parameters}
   ;
 
 # s: scope for bare IDENT, t: scope for IDENT with arglist
-expression[s, t] : expression-1[s, t] (
+expression[S, T] : expression-1[S, T] (
   (
       SPLIT{keyword.operator}
     | MIX{keyword.operator}
     | SEQ{keyword.operator}
     | PAR{keyword.operator}
     | REC{keyword.operator}
-  ) expression-1[s, t])* ;
+  ) expression-1[S, T])* ;
 
-expression-1[s, t] : infixexp[s, t] (
+expression-1[S, T] : infixexp[S, T] (
     WITH{keyword.operator.with} with-body
   | LETREC{keyword.operator.letrec} letrec-body
   )* ;
@@ -106,7 +106,7 @@ LETREC = '\bletrec\b'
 LBRAQ = `{`
 RBRAQ = `}`
 
-infixexp[s, t] : infixexp-1[s, t] ((
+infixexp[S, T] : infixexp-1[S, T] ((
                                 LT{keyword.operator}
                               | LE{keyword.operator}
                               | EQ{keyword.operator}
@@ -125,26 +125,26 @@ infixexp[s, t] : infixexp-1[s, t] ((
                               | RSH{keyword.operator}
                               | POWOP{keyword.operator}
                               | FDELAY{keyword.operator}
-                             ) infixexp-1[s, t])*;
-infixexp-1[s, t] : primitive[s, t] (
+                             ) infixexp-1[S, T])*;
+infixexp-1[S, T] : primitive[S, T] (
     DELAY
-  | DOT{punctuation.accessor.dot} name-or-func-call[s, t]
+  | DOT{punctuation.accessor.dot} name-or-func-call[S, T]
   | arglist
 )* ;
 
-name-or-func-call[s, t] : IDENT{#[t]} arglist | IDENT{#[s]};
+name-or-func-call[S, T] : IDENT{#[T]} arglist | IDENT{#[S]};
 
 
 arglist{meta.function-call.arguments} : arg-param-list['meta.generic-name', 'variable.function'] ;
-arg-param-list[s, t]{meta.function-call.arguments} : LPAREN{punctuation.section.arguments.begin}
-                                                     argument[s, t] (`,` argument[s, t])*
+arg-param-list[S, T]{meta.function-call.arguments} : LPAREN{punctuation.section.arguments.begin}
+                                                     argument[S, T] (`,` argument[S, T])*
                                                      RPAREN{punctuation.section.arguments.end}
                                       ;
-argument[s, t] : infixexp[s, t] ((SPLIT{keyword.operator}
+argument[S, T] : infixexp[S, T] ((SPLIT{keyword.operator}
                                   | MIX{keyword.operator}
                                   | SEQ{keyword.operator}
                                   | REC{keyword.operator}
-                                  ) infixexp[s, t])* ;
+                                  ) infixexp[S, T])* ;
 LT = `<`
 LE = `<=`
 EQ = `==`
@@ -167,7 +167,7 @@ DELAY = `'`
 DOT = `.`
 croc-deflist : `[` deflist `]` ;
 
-primitive[s, t]  : (
+primitive[S, T]  : (
                      ADD{constant.numeric} | SUB{constant.numeric}
                     )?  NUM{constant.numeric}
                  | `_`                           {constant.language}
@@ -223,8 +223,8 @@ primitive[s, t]  : (
                  | '\bassertbounds\b'            {support.function.builtin}
                  | '\blowest\b'                  {support.function.builtin}
                  | '\bhighest\b'                 {support.function.builtin}
-                 | SUB{constant.numeric}? name-or-func-call[s, t]
-                 | paren-expr[s, t]
+                 | SUB{constant.numeric}? name-or-func-call[S, T]
+                 | paren-expr[S, T]
                  | `\`{keyword.operator} lambda-defn
                  | '\bcase\b'{keyword.control.case} case-body
                  | '\bffunction\b'{support.function.builtin} ffunction-body
@@ -234,7 +234,7 @@ primitive[s, t]  : (
                  | '\blibrary\b'{support.function.builtin} library-body
                  | '\benvironment\b'{keyword.control} environment-body
                  | '\bwaveform\b'{support.type} waveform-body
-                 | route[s, t]
+                 | route[S, T]
                  | '\bbutton\b'{support.function.builtin}    ui-args-0
                  | '\bcheckbox\b'{support.function.builtin}  ui-args-0
                  | '\bvslider\b'{support.function.builtin}   ui-args-4
@@ -271,9 +271,9 @@ ui-args-e{meta.function-call.arguments} :
   PAR typical-expression RPAREN{punctuation.section.group.end} ;
 
 
-paren-expr[s, t]{meta.group} :
+paren-expr[S, T]{meta.group} :
   LPAREN{punctuation.section.group.begin}
-  expression[s, t]
+  expression[S, T]
   RPAREN{punctuation.section.group.end} ;
 case-body{meta.block.case} :
   LBRAQ{punctuation.section.block.begin}
@@ -328,15 +328,15 @@ wf-number : (ADD{constant.numeric} | SUB{constant.numeric})? NUM{constant.numeri
 
 ROUTE = '\broute\b'
 route-lit['meta.generic-name', 'variable.function'] : ROUTE{support.function.builtin} ;
-route-lit[s, t] : ROUTE{invalid.illegal} ;
-route[s, t] : route-lit[s, t] route-body[s, t] ;
-route-body[s, t]{meta.function-call.arguments} :
+route-lit[S, T] : ROUTE{invalid.illegal} ;
+route[S, T] : route-lit[S, T] route-body[S, T] ;
+route-body[S, T]{meta.function-call.arguments} :
   LPAREN{punctuation.group.section.begin}
-  argument[s, t]
+  argument[S, T]
   PAR
-  argument[s, t]
+  argument[S, T]
   PAR
-  expression[s, t]
+  expression[S, T]
   RPAREN{punctuation.group.section.end} ;
 
 fstring : '(<)([a-zA-Z]*(\.[a-zA-Z])?)(>)'{
