@@ -84,7 +84,7 @@ contexts:
     set: block-comment@wrap_meta!
   - include: fail!
   block-comment@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [block-comment@meta!, pop2!, block-comment]
   block-comment:
   - match: ''
@@ -107,7 +107,7 @@ contexts:
   - match: ''
     pop: 2
   line-comment@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [line-comment@meta!, pop2!, line-comment]
   line-comment:
   - match: ''
@@ -247,13 +247,13 @@ contexts:
     set: paramlist@wrap_meta!
   - include: fail!
   paramlist@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [paramlist@meta!, pop2!, paramlist]
   paramlist:
   - match: ''
     set: arg-param-list/ada6e9a@wrap_meta!
   arg-param-list/ada6e9a@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [arg-param-list/ada6e9a@meta!, pop2!, arg-param-list/ada6e9a]
   arg-param-list/ada6e9a:
   - match: ''
@@ -526,13 +526,13 @@ contexts:
     set: [pop3!, 'name-or-func-call/7ad33d6@0,1@fail!', name-or-func-call/7ad33d6@follow!,
       pop2!, arglist@wrap_meta!, pop2!, /T/bbbc937]
   arglist@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [arglist@meta!, pop2!, arglist]
   arglist:
   - match: ''
     set: arg-param-list/04fd23e@wrap_meta!
   arg-param-list/04fd23e@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [arg-param-list/04fd23e@meta!, pop2!, arg-param-list/04fd23e]
   arg-param-list/04fd23e:
   - match: ''
@@ -804,7 +804,7 @@ contexts:
     pop: 2
   - include: fail!
   paren-expr/b91d3ee@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [paren-expr/b91d3ee@meta!, pop2!, paren-expr/b91d3ee]
   paren-expr/b91d3ee:
   - match: ''
@@ -852,7 +852,7 @@ contexts:
     pop: 2
   - include: fail!
   letrec-body@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [letrec-body@meta!, pop2!, letrec-body]
   letrec-body:
   - match: ''
@@ -908,7 +908,7 @@ contexts:
     pop: 2
   - include: fail!
   with-body@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [with-body@meta!, pop2!, with-body]
   with-body:
   - match: ''
@@ -1012,7 +1012,7 @@ contexts:
     pop: 2
   - include: fail!
   ui-args-1@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [ui-args-1@meta!, pop2!, ui-args-1]
   ui-args-1:
   - match: ''
@@ -1020,7 +1020,7 @@ contexts:
       pop2!, /T/2405f67]
   string@wrap_meta!:
   - meta_include_prototype: false
-  - match: ''
+  - match: (?=\S)
     set: [string@meta!, pop2!, string]
   string:
   - meta_include_prototype: false
@@ -1131,7 +1131,7 @@ contexts:
     pop: 2
   - include: fail!
   ui-args-2@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [ui-args-2@meta!, pop2!, ui-args-2]
   ui-args-2:
   - match: ''
@@ -1152,7 +1152,7 @@ contexts:
     pop: 2
   - include: fail!
   ui-args-e@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [ui-args-e@meta!, pop2!, ui-args-e]
   ui-args-e:
   - match: ''
@@ -1178,7 +1178,7 @@ contexts:
     pop: 2
   - include: fail!
   ui-args-4@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [ui-args-4@meta!, pop2!, ui-args-4]
   ui-args-4:
   - match: ''
@@ -1205,7 +1205,7 @@ contexts:
     pop: 2
   - include: fail!
   ui-args-0@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [ui-args-0@meta!, pop2!, ui-args-0]
   ui-args-0:
   - match: ''
@@ -1231,7 +1231,7 @@ contexts:
     pop: 2
   - include: fail!
   route-body/381fbca@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [route-body/381fbca@meta!, pop2!, route-body/381fbca]
   route-body/381fbca:
   - match: ''
@@ -1257,7 +1257,7 @@ contexts:
     pop: 2
   - include: fail!
   waveform-body@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [waveform-body@meta!, pop2!, waveform-body]
   waveform-body:
   - match: ''
@@ -1316,7 +1316,7 @@ contexts:
     pop: 2
   - include: fail!
   environment-body@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [environment-body@meta!, pop2!, environment-body]
   environment-body:
   - match: ''
@@ -1356,7 +1356,7 @@ contexts:
     pop: 2
   - include: fail!
   library-body@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [library-body@meta!, pop2!, library-body]
   library-body:
   - match: ''
@@ -1371,7 +1371,7 @@ contexts:
     pop: 2
   - include: fail!
   component-body@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [component-body@meta!, pop2!, component-body]
   component-body:
   - match: ''
@@ -1386,12 +1386,12 @@ contexts:
     pop: 2
   - include: fail!
   f-other-body@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [f-other-body@meta!, pop2!, f-other-body]
   f-other-body:
   - match: ''
-    set: [/T/6ac006f, pop2!, fstring, pop2!, /T/04cc951, pop2!, /T/f2b0cab, pop2!,
-      type, pop2!, /T/d277520]
+    set: [/T/6ac006f, pop2!, fstring@wrap_meta!, pop2!, /T/04cc951, pop2!, /T/f2b0cab,
+      pop2!, type, pop2!, /T/d277520]
   type:
   - match: (?=\bint\b)
     set: /T/b8e588a
@@ -1412,17 +1412,30 @@ contexts:
   - match: _?[a-zA-Z][_a-zA-Z0-9]*
     pop: 2
   - include: fail!
+  fstring@wrap_meta!:
+  - match: (?=\S)
+    set: [fstring@meta!, pop2!, fstring]
   fstring:
   - match: ''
-    set: /T/3870b2b
-  /T/3870b2b:
-  - match: (<)([a-zA-Z]*(\.[a-zA-Z])?)(>)
-    scope: string.quoted.other.lt-gt.faust
-    captures:
-      1: punctuation.definition.string.begin.faust
-      4: punctuation.definition.string.end.faust
+    set: [/T/ce6ca6e, pop2!, /T/50f016b, pop2!, /T/601256e]
+  /T/601256e:
+  - match: <
+    scope: punctuation.definition.string.begin.faust
     pop: 2
   - include: fail!
+  /T/50f016b:
+  - match: (?<=<)[a-zA-Z]*(\.[a-zA-Z])?
+    pop: 2
+  - include: fail!
+  /T/ce6ca6e:
+  - match: (?<=[a-zA-Z\.<])>
+    scope: punctuation.definition.string.end.faust
+    pop: 2
+  - include: fail!
+  fstring@meta!:
+  - meta_scope: string.quoted.other.lt-gt.faust
+  - match: ''
+    pop: 2
   f-other-body@meta!:
   - meta_scope: meta.function-call.arguments.faust
   - match: ''
@@ -1438,11 +1451,11 @@ contexts:
     pop: 2
   - include: fail!
   ffunction-body@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [ffunction-body@meta!, pop2!, ffunction-body]
   ffunction-body:
   - match: ''
-    set: [/T/6ac006f, pop2!, string@wrap_meta!, pop2!, /T/04cc951, pop2!, fstring,
+    set: [/T/6ac006f, pop2!, string@wrap_meta!, pop2!, /T/04cc951, pop2!, fstring@wrap_meta!,
       pop2!, /T/04cc951, pop2!, signature, pop2!, /T/d277520]
   signature:
   - match: ''
@@ -1471,7 +1484,7 @@ contexts:
   - match: ''
     set: [/T/39743c2, pop2!, /T/cde410e]
   typelist@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [typelist@meta!, pop2!, typelist]
   typelist:
   - match: ''
@@ -1510,7 +1523,7 @@ contexts:
     pop: 2
   - include: fail!
   case-body@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [case-body@meta!, pop2!, case-body]
   case-body:
   - match: ''
@@ -1539,13 +1552,13 @@ contexts:
     pop: 2
   - include: fail!
   lambda-defn@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [lambda-defn@meta!, pop2!, lambda-defn]
   lambda-defn:
   - match: ''
     set: [paren-expr/b91d3ee@wrap_meta!, pop2!, /T/8562177, pop2!, lambda-params@wrap_meta!]
   lambda-params@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [lambda-params@meta!, pop2!, lambda-params]
   lambda-params:
   - match: ''
@@ -2198,7 +2211,7 @@ contexts:
     pop: 2
   - include: fail!
   route-body/0543e0b@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [route-body/0543e0b@meta!, pop2!, route-body/0543e0b]
   route-body/0543e0b:
   - match: ''
@@ -2268,7 +2281,7 @@ contexts:
   - match: ''
     pop: 2
   paren-expr/f6b5b6c@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [paren-expr/f6b5b6c@meta!, pop2!, paren-expr/f6b5b6c]
   paren-expr/f6b5b6c:
   - match: ''
@@ -2579,7 +2592,7 @@ contexts:
   - match: ''
     pop: 2
   docs@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [docs@meta!, pop2!, docs]
   docs:
   - match: ''
@@ -2631,7 +2644,7 @@ contexts:
   - match: ''
     fail: /alt-0/statement@0,1
   decl-string@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [decl-string@meta!, pop2!, decl-string]
   decl-string:
   - match: ''
@@ -2646,7 +2659,7 @@ contexts:
     pop: 2
   - include: fail!
   import-arg-list@wrap_meta!:
-  - match: ''
+  - match: (?=\S)
     set: [import-arg-list@meta!, pop2!, import-arg-list]
   import-arg-list:
   - match: ''

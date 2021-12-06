@@ -339,11 +339,11 @@ route-body[S, T]{meta.function-call.arguments} :
   expression[S, T]
   RPAREN{punctuation.group.section.end} ;
 
-fstring : '(<)([a-zA-Z]*(\.[a-zA-Z])?)(>)'{
-  string.quoted.other.lt-gt,
-  1: punctuation.definition.string.begin,
-  4: punctuation.definition.string.end
-} ;
+fstring{string.quoted.other.lt-gt}
+  : `<`{punctuation.definition.string.begin}
+    '(?<=<)[a-zA-Z]*(\.[a-zA-Z])?'
+    '(?<=[a-zA-Z\.<])>'{punctuation.definition.string.end}
+  ;
 
 type : '\bint\b'{storage.type} | '\bfloat\b'{storage.type} ;
 
