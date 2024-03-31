@@ -291,8 +291,8 @@ contexts:
     set: primitive/aa92c0e@0,6
   - match: (?=\-)
     set: primitive/aa92c0e@0,7,54
-  - match: (?=_)
-    set: /T/2043336
+  - match: (?=\b_\b)
+    set: /T/96881c6
   - match: (?=!)
     set: /T/d7508c5
   - match: (?=\bmem\b)
@@ -565,8 +565,8 @@ contexts:
     set: primitive/83508ff@0,6
   - match: (?=\-)
     set: primitive/83508ff@0,7,54
-  - match: (?=_)
-    set: /T/2043336
+  - match: (?=\b_\b)
+    set: /T/96881c6
   - match: (?=!)
     set: /T/d7508c5
   - match: (?=\bmem\b)
@@ -1790,8 +1790,8 @@ contexts:
     scope: constant.language.faust
     pop: 2
   - include: fail!
-  /T/2043336:
-  - match: _
+  /T/96881c6:
+  - match: \b_\b
     scope: constant.language.faust
     pop: 2
   - include: fail!

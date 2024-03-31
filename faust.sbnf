@@ -170,7 +170,7 @@ croc-deflist : `[` deflist `]` ;
 primitive[S, T]  : (
                      ADD{constant.numeric} | SUB{constant.numeric}
                     )?  NUM{constant.numeric}
-                 | `_`                           {constant.language}
+                 | '\b_\b'                       {constant.language}
                  | `!`                           {constant.language}
                  | '\bmem\b'                     {support.function.builtin}
                  | '\bprefix\b'                  {support.function.builtin}
