@@ -130,16 +130,17 @@ infixexp-1[S, T] : primitive[S, T] (
     DELAY
   | DOT{punctuation.accessor.dot} name-or-func-call[S, T]
   | arglist
+  | croc-deflist
 )* ;
 
 name-or-func-call[S, T] : IDENT{#[T]} arglist | IDENT{#[S]};
 
 
 arglist{meta.function-call.arguments} : arg-param-list['meta.generic-name', 'variable.function'] ;
-arg-param-list[S, T]{meta.function-call.arguments} : LPAREN{punctuation.section.arguments.begin}
-                                                     argument[S, T] (`,` argument[S, T])*
-                                                     RPAREN{punctuation.section.arguments.end}
-                                      ;
+arg-param-list[S, T] : LPAREN{punctuation.section.arguments.begin}
+                       argument[S, T] (`,` argument[S, T])*
+                       RPAREN{punctuation.section.arguments.end}
+                     ;
 argument[S, T] : infixexp[S, T] ((SPLIT{keyword.operator}
                                   | MIX{keyword.operator}
                                   | SEQ{keyword.operator}
@@ -165,7 +166,11 @@ POWOP = `^`
 FDELAY = `@`
 DELAY = `'`
 DOT = `.`
-croc-deflist : `[` deflist `]` ;
+croc-deflist :
+  `[`{punctuation.section.group.begin}
+  deflist
+  `]`{punctuation.section.group.end}
+  ;
 
 primitive[S, T]  : (
                      ADD{constant.numeric} | SUB{constant.numeric}
@@ -224,8 +229,11 @@ primitive[S, T]  : (
                  | '\blowest\b'                  {support.function.builtin}
                  | '\bhighest\b'                 {support.function.builtin}
                  | SUB{constant.numeric}? name-or-func-call[S, T]
+                 | '\bthrow\b'{support.function.builtin} ui-args-0
+                 | '\bcatch\b'{support.function.builtin} ui-args-0
                  | paren-expr[S, T]
                  | `\`{keyword.operator} lambda-defn
+                 | modlist
                  | '\bcase\b'{keyword.control.case} case-body
                  | '\bffunction\b'{support.function.builtin} ffunction-body
                  | '\bfconstant\b'{support.function.builtin} f-other-body
@@ -246,10 +254,10 @@ primitive[S, T]  : (
                  | '\bvbargraph\b'{support.function.builtin} ui-args-2
                  | '\bhbargraph\b'{support.function.builtin} ui-args-2
                  | '\bsoundfile\b'{support.function.builtin} ui-args-1
-                 # | fpar                          {}
-                 # | fseq                          {}
-                 # | fsum                          {}
-                 # | fprod                         {}
+                 | '\bpar\b'{support.function.builtin}  fpar
+                 | '\bseq\b'{support.function.builtin}  fpar
+                 | '\bsum\b'{support.function.builtin}  fpar
+                 | '\bprod\b'{support.function.builtin} fpar
                  | '\binputs\b'{support.function.builtin} paren-expr['meta.generic-name', 'variable.function']
                  | '\boutputs\b'{support.function.builtin} paren-expr['meta.generic-name', 'variable.function']
                  ;
@@ -270,6 +278,14 @@ ui-args-e{meta.function-call.arguments} :
   LPAREN{punctuation.section.group.begin} string
   PAR typical-expression RPAREN{punctuation.section.group.end} ;
 
+fpar{meta.function-call.arguments} :
+  LPAREN{punctuation.section.group.begin}
+  IDENT{variable.parameter}
+  PAR
+  typical-argument
+  PAR
+  typical-expression
+  RPAREN{punctuation.section.group.end} ;
 
 paren-expr[S, T]{meta.group} :
   LPAREN{punctuation.section.group.begin}
@@ -280,6 +296,9 @@ case-body{meta.block.case} :
   rulelist
   RBRAQ{punctuation.section.block.end} ;
 rulelist : (paramlist `=>`{keyword.operator} typical-expression ENDDEF)* ;
+
+modlist : `[` modentry (PAR modentry)* `->`{keyword.operator} typical-expression `]` ;
+modentry : string (SEQ{keyword.operator} typical-argument)?;
 
 ffunction-body{meta.function-call.arguments} :
   LPAREN{punctuation.group.section.begin}
@@ -293,7 +312,7 @@ ffunction-body{meta.function-call.arguments} :
 signature :
   type
   IDENT{variable.function}
-  (OR IDENT{variable.function} (OR IDENT{variable.function})?)?
+  (OR IDENT{variable.function} (OR IDENT{variable.function} (OR IDENT{variable.function})?)?)?
   typelist ;
 typelist{meta.group.signature} :
   LPAREN{punctuation.group.section.begin}
