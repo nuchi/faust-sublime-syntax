@@ -85,7 +85,7 @@ expression-1[S, T] : infixexp[S, T] (
 
 
 SPLIT = `<:`
-MIX = `:>`
+MIX = '(:>|\+>)'
 SEQ = ':(?!>)(?<!<)'
 PAR = `,`
 REC = `~`
