@@ -251,10 +251,7 @@ contexts:
     set: [paramlist@meta!, pop2!, paramlist]
   paramlist:
   - match: ''
-    set: arg-param-list/ada6e9a@wrap_meta!
-  arg-param-list/ada6e9a@wrap_meta!:
-  - match: (?=\S)
-    set: [arg-param-list/ada6e9a@meta!, pop2!, arg-param-list/ada6e9a]
+    set: arg-param-list/ada6e9a
   arg-param-list/ada6e9a:
   - match: ''
     set: [/*-0/arg-param-list/ada6e9a, pop2!, argument/107a877, pop2!, /T/e99570e]
@@ -383,10 +380,16 @@ contexts:
     set: /T/07a4754
   - match: (?=\bhighest\b)
     set: /T/a76dad1
+  - match: (?=\bthrow\b)
+    set: [ui-args-0@wrap_meta!, pop2!, /T/468b463]
+  - match: (?=\bcatch\b)
+    set: [ui-args-0@wrap_meta!, pop2!, /T/1efdd6c]
   - match: (?=\()
     set: paren-expr/f6b5b6c@wrap_meta!
   - match: (?=\\)
     set: [lambda-defn@wrap_meta!, pop2!, /T/1dc7187]
+  - match: (?=\[)
+    set: modlist
   - match: (?=\bcase\b)
     set: [case-body@wrap_meta!, pop2!, /T/58b7d3f]
   - match: (?=\bffunction\b)
@@ -427,6 +430,14 @@ contexts:
     set: [ui-args-2@wrap_meta!, pop2!, /T/ebbb425]
   - match: (?=\bsoundfile\b)
     set: [ui-args-1@wrap_meta!, pop2!, /T/158d611]
+  - match: (?=\bpar\b)
+    set: [fpar@wrap_meta!, pop2!, /T/1128222]
+  - match: (?=\bseq\b)
+    set: [fpar@wrap_meta!, pop2!, /T/2958260]
+  - match: (?=\bsum\b)
+    set: [fpar@wrap_meta!, pop2!, /T/7862905]
+  - match: (?=\bprod\b)
+    set: [fpar@wrap_meta!, pop2!, /T/1d0ee40]
   - match: (?=\binputs\b)
     set: [paren-expr/b91d3ee@wrap_meta!, pop2!, /T/d41bdb5]
   - match: (?=\boutputs\b)
@@ -468,13 +479,13 @@ contexts:
     pop: 2
   - match: (?=')
     pop: 2
+  - match: (?=(:>|\+>))
+    pop: 2
   - match: (?=,)
     pop: 2
   - match: (?=/)
     pop: 2
   - match: (?=:(?!>)(?<!<))
-    pop: 2
-  - match: (?=:>)
     pop: 2
   - match: (?=<)
     pop: 2
@@ -508,6 +519,8 @@ contexts:
     pop: 2
   - match: (?=\.)
     pop: 2
+  - match: (?=\[)
+    pop: 2
   - match: (?=\^)
     pop: 2
   - match: (?=\bletrec\b)
@@ -530,10 +543,7 @@ contexts:
     set: [arglist@meta!, pop2!, arglist]
   arglist:
   - match: ''
-    set: arg-param-list/04fd23e@wrap_meta!
-  arg-param-list/04fd23e@wrap_meta!:
-  - match: (?=\S)
-    set: [arg-param-list/04fd23e@meta!, pop2!, arg-param-list/04fd23e]
+    set: arg-param-list/04fd23e
   arg-param-list/04fd23e:
   - match: ''
     set: [/*-0/arg-param-list/04fd23e, pop2!, typical-argument, pop2!, /T/e99570e]
@@ -657,10 +667,16 @@ contexts:
     set: /T/07a4754
   - match: (?=\bhighest\b)
     set: /T/a76dad1
+  - match: (?=\bthrow\b)
+    set: [ui-args-0@wrap_meta!, pop2!, /T/468b463]
+  - match: (?=\bcatch\b)
+    set: [ui-args-0@wrap_meta!, pop2!, /T/1efdd6c]
   - match: (?=\()
     set: paren-expr/b91d3ee@wrap_meta!
   - match: (?=\\)
     set: [lambda-defn@wrap_meta!, pop2!, /T/1dc7187]
+  - match: (?=\[)
+    set: modlist
   - match: (?=\bcase\b)
     set: [case-body@wrap_meta!, pop2!, /T/58b7d3f]
   - match: (?=\bffunction\b)
@@ -701,6 +717,14 @@ contexts:
     set: [ui-args-2@wrap_meta!, pop2!, /T/ebbb425]
   - match: (?=\bsoundfile\b)
     set: [ui-args-1@wrap_meta!, pop2!, /T/158d611]
+  - match: (?=\bpar\b)
+    set: [fpar@wrap_meta!, pop2!, /T/1128222]
+  - match: (?=\bseq\b)
+    set: [fpar@wrap_meta!, pop2!, /T/2958260]
+  - match: (?=\bsum\b)
+    set: [fpar@wrap_meta!, pop2!, /T/7862905]
+  - match: (?=\bprod\b)
+    set: [fpar@wrap_meta!, pop2!, /T/1d0ee40]
   - match: (?=\binputs\b)
     set: [paren-expr/b91d3ee@wrap_meta!, pop2!, /T/d41bdb5]
   - match: (?=\boutputs\b)
@@ -731,13 +755,13 @@ contexts:
     pop: 2
   - match: (?=')
     pop: 2
+  - match: (?=(:>|\+>))
+    pop: 2
   - match: (?=,)
     pop: 2
   - match: (?=/)
     pop: 2
   - match: (?=:(?!>)(?<!<))
-    pop: 2
-  - match: (?=:>)
     pop: 2
   - match: (?=;)
     pop: 2
@@ -771,7 +795,13 @@ contexts:
     pop: 2
   - match: (?=\-)
     pop: 2
+  - match: (?=\->)
+    pop: 2
   - match: (?=\.)
+    pop: 2
+  - match: (?=\[)
+    pop: 2
+  - match: (?=\])
     pop: 2
   - match: (?=\^)
     pop: 2
@@ -821,17 +851,19 @@ contexts:
   - match: ''
     set: [/*-0/expression-1/af1e09d, pop2!, infixexp/92d36e8]
   /*-0/expression-1/af1e09d:
+  - match: (?=(:>|\+>))
+    pop: 2
   - match: (?=,)
     pop: 2
   - match: (?=:(?!>)(?<!<))
-    pop: 2
-  - match: (?=:>)
     pop: 2
   - match: (?=;)
     pop: 2
   - match: (?=<:)
     pop: 2
   - match: (?=\))
+    pop: 2
+  - match: (?=\])
     pop: 2
   - match: (?=\~)
     pop: 2
@@ -914,6 +946,8 @@ contexts:
   - match: ''
     set: [/T/7a57953, pop2!, deflist, pop2!, /T/3777028]
   deflist:
+  - match: (?=\])
+    pop: 2
   - match: (?=\})
     pop: 2
   - match: (?=\bprocess\b)
@@ -941,11 +975,13 @@ contexts:
     pop: 2
   - match: (?=\))
     pop: 2
+  - match: (?=\])
+    pop: 2
+  - match: (?=(:>|\+>))
+    push: [pop2!, /alt-0//*-0/expression/8be7c96]
   - match: (?=,)
     push: [pop2!, /alt-0//*-0/expression/8be7c96]
   - match: (?=:(?!>)(?<!<))
-    push: [pop2!, /alt-0//*-0/expression/8be7c96]
-  - match: (?=:>)
     push: [pop2!, /alt-0//*-0/expression/8be7c96]
   - match: (?=<:)
     push: [pop2!, /alt-0//*-0/expression/8be7c96]
@@ -958,8 +994,8 @@ contexts:
   /alt-0//alt-0//*-0/expression/8be7c96:
   - match: (?=<:)
     set: /T/9a22c65
-  - match: (?=:>)
-    set: /T/b42b84b
+  - match: (?=(:>|\+>))
+    set: /T/b01ecb3
   - match: (?=:(?!>)(?<!<))
     set: /T/b95dfcd
   - match: (?=,)
@@ -982,8 +1018,8 @@ contexts:
     scope: keyword.operator.faust
     pop: 2
   - include: fail!
-  /T/b42b84b:
-  - match: :>
+  /T/b01ecb3:
+  - match: (:>|\+>)
     scope: keyword.operator.faust
     pop: 2
   - include: fail!
@@ -1003,6 +1039,41 @@ contexts:
     pop: 2
   /T/d41bdb5:
   - match: \binputs\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/1d0ee40:
+  - match: \bprod\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  fpar@wrap_meta!:
+  - match: (?=\S)
+    set: [fpar@meta!, pop2!, fpar]
+  fpar:
+  - match: ''
+    set: [/T/8715cc4, pop2!, typical-expression, pop2!, /T/04cc951, pop2!, typical-argument,
+      pop2!, /T/04cc951, pop2!, /T/bbbc937, pop2!, /T/2405f67]
+  /T/04cc951:
+  - match: ','
+    pop: 2
+  - include: fail!
+  fpar@meta!:
+  - meta_scope: meta.function-call.arguments.faust
+  - match: ''
+    pop: 2
+  /T/7862905:
+  - match: \bsum\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/2958260:
+  - match: \bseq\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/1128222:
+  - match: \bpar\b
     scope: support.function.builtin.faust
     pop: 2
   - include: fail!
@@ -1079,9 +1150,13 @@ contexts:
   - meta_include_prototype: false
   - match: (?=,)
     pop: 2
+  - match: (?=:(?!>)(?<!<))
+    pop: 2
   - match: (?=;)
     pop: 2
   - match: (?=\))
+    pop: 2
+  - match: (?=\->)
     pop: 2
   - include: fail!
   /*-0/string@p!@1@fail!:
@@ -1117,10 +1192,6 @@ contexts:
   - meta_scope: string.quoted.faust
   - match: ''
     pop: 2
-  /T/04cc951:
-  - match: ','
-    pop: 2
-  - include: fail!
   ui-args-1@meta!:
   - meta_scope: meta.function-call.arguments.faust
   - match: ''
@@ -1459,8 +1530,21 @@ contexts:
       pop2!, /T/04cc951, pop2!, signature, pop2!, /T/d277520]
   signature:
   - match: ''
-    set: [typelist@wrap_meta!, pop2!, /opt//opt/c9e1b68, pop2!, /T/39743c2, pop2!,
+    set: [typelist@wrap_meta!, pop2!, /opt//opt/7a66e85, pop2!, /T/39743c2, pop2!,
       type]
+  /opt//opt/7a66e85:
+  - match: (?=\()
+    pop: 2
+  - match: (?=\|)
+    set: /alt-0//opt//opt/7a66e85
+  - include: fail!
+  /alt-0//opt//opt/7a66e85:
+  - match: ''
+    set: [/opt//opt/c9e1b68, pop2!, /T/39743c2, pop2!, /T/cde410e]
+  /T/cde410e:
+  - match: \|
+    pop: 2
+  - include: fail!
   /opt//opt/c9e1b68:
   - match: (?=\()
     pop: 2
@@ -1470,10 +1554,6 @@ contexts:
   /alt-0//opt//opt/c9e1b68:
   - match: ''
     set: [/opt//opt/0bb83a2, pop2!, /T/39743c2, pop2!, /T/cde410e]
-  /T/cde410e:
-  - match: \|
-    pop: 2
-  - include: fail!
   /opt//opt/0bb83a2:
   - match: (?=\()
     pop: 2
@@ -1546,6 +1626,45 @@ contexts:
   - meta_scope: meta.block.case.faust
   - match: ''
     pop: 2
+  modlist:
+  - match: ''
+    set: [/*-0/modlist, pop2!, modentry, pop2!, /T/248d5bb]
+  /T/248d5bb:
+  - match: \[
+    pop: 2
+  - include: fail!
+  modentry:
+  - match: ''
+    set: [/opt//opt/ced5b1e, pop2!, string@wrap_meta!]
+  /opt//opt/ced5b1e:
+  - match: (?=,)
+    pop: 2
+  - match: (?=\->)
+    pop: 2
+  - match: (?=:(?!>)(?<!<))
+    set: /alt-0//opt//opt/ced5b1e
+  - include: fail!
+  /alt-0//opt//opt/ced5b1e:
+  - match: ''
+    set: [typical-argument, pop2!, /T/b95dfcd]
+  /*-0/modlist:
+  - match: (?=\->)
+    set: [/T/1314152, pop2!, typical-expression, pop2!, /T/db5c762]
+  - match: (?=,)
+    push: [pop2!, /alt-0//*-0/modlist]
+  - include: fail!
+  /alt-0//*-0/modlist:
+  - match: ''
+    set: [modentry, pop2!, /T/04cc951]
+  /T/db5c762:
+  - match: \->
+    scope: keyword.operator.faust
+    pop: 2
+  - include: fail!
+  /T/1314152:
+  - match: \]
+    pop: 2
+  - include: fail!
   /T/1dc7187:
   - match: \\
     scope: keyword.operator.faust
@@ -1575,6 +1694,16 @@ contexts:
   - meta_scope: meta.function.lambda.faust
   - match: ''
     pop: 2
+  /T/1efdd6c:
+  - match: \bcatch\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
+  /T/468b463:
+  - match: \bthrow\b
+    scope: support.function.builtin.faust
+    pop: 2
+  - include: fail!
   /T/a76dad1:
   - match: \bhighest\b
     scope: support.function.builtin.faust
@@ -1810,13 +1939,13 @@ contexts:
     pop: 2
   - match: (?=')
     pop: 2
+  - match: (?=(:>|\+>))
+    pop: 2
   - match: (?=,)
     pop: 2
   - match: (?=/)
     pop: 2
   - match: (?=:(?!>)(?<!<))
-    pop: 2
-  - match: (?=:>)
     pop: 2
   - match: (?=;)
     pop: 2
@@ -1850,7 +1979,13 @@ contexts:
     pop: 2
   - match: (?=\-)
     pop: 2
+  - match: (?=\->)
+    pop: 2
   - match: (?=\.)
+    pop: 2
+  - match: (?=\[)
+    pop: 2
+  - match: (?=\])
     pop: 2
   - match: (?=\^)
     pop: 2
@@ -1946,13 +2081,13 @@ contexts:
     pop: 2
   - match: (?=%)
     pop: 2
+  - match: (?=(:>|\+>))
+    pop: 2
   - match: (?=,)
     pop: 2
   - match: (?=/)
     pop: 2
   - match: (?=:(?!>)(?<!<))
-    pop: 2
-  - match: (?=:>)
     pop: 2
   - match: (?=;)
     pop: 2
@@ -1974,6 +2109,10 @@ contexts:
     pop: 2
   - match: (?=\-)
     pop: 2
+  - match: (?=\->)
+    pop: 2
+  - match: (?=\])
+    pop: 2
   - match: (?=\^)
     pop: 2
   - match: (?=\bletrec\b)
@@ -1992,6 +2131,8 @@ contexts:
     push: [pop2!, /alt-0//*-0/infixexp-1/0115f85]
   - match: (?=\.)
     push: [pop2!, /alt-0//*-0/infixexp-1/0115f85]
+  - match: (?=\[)
+    push: [pop2!, /alt-0//*-0/infixexp-1/0115f85]
   - include: fail!
   /alt-0//*-0/infixexp-1/0115f85:
   - match: (?=')
@@ -2000,6 +2141,21 @@ contexts:
     set: [name-or-func-call/ae9127c, pop2!, /T/7ba0cff]
   - match: (?=\()
     set: arglist@wrap_meta!
+  - match: (?=\[)
+    set: croc-deflist
+  - include: fail!
+  croc-deflist:
+  - match: ''
+    set: [/T/9eec5e1, pop2!, deflist, pop2!, /T/6570b19]
+  /T/6570b19:
+  - match: \[
+    scope: punctuation.section.group.begin.faust
+    pop: 2
+  - include: fail!
+  /T/9eec5e1:
+  - match: \]
+    scope: punctuation.section.group.end.faust
+    pop: 2
   - include: fail!
   /T/7ba0cff:
   - match: \.
@@ -2023,17 +2179,21 @@ contexts:
     push: [pop2!, /alt-0//*-0/infixexp/92d36e8]
   - match: (?=>>)
     push: [pop2!, /alt-0//*-0/infixexp/92d36e8]
+  - match: (?=(:>|\+>))
+    pop: 2
   - match: (?=,)
     pop: 2
   - match: (?=:(?!>)(?<!<))
-    pop: 2
-  - match: (?=:>)
     pop: 2
   - match: (?=;)
     pop: 2
   - match: (?=<:)
     pop: 2
   - match: (?=\))
+    pop: 2
+  - match: (?=\->)
+    pop: 2
+  - match: (?=\])
     pop: 2
   - match: (?=\bletrec\b)
     pop: 2
@@ -2152,9 +2312,11 @@ contexts:
     pop: 2
   - match: (?=\))
     pop: 2
-  - match: (?=:(?!>)(?<!<))
+  - match: (?=\->)
+    pop: 2
+  - match: (?=(:>|\+>))
     push: [pop2!, /alt-0//*-0/argument/477f598]
-  - match: (?=:>)
+  - match: (?=:(?!>)(?<!<))
     push: [pop2!, /alt-0//*-0/argument/477f598]
   - match: (?=<:)
     push: [pop2!, /alt-0//*-0/argument/477f598]
@@ -2167,8 +2329,8 @@ contexts:
   /alt-0//alt-0//*-0/argument/477f598:
   - match: (?=<:)
     set: /T/9a22c65
-  - match: (?=:>)
-    set: /T/b42b84b
+  - match: (?=(:>|\+>))
+    set: /T/b01ecb3
   - match: (?=:(?!>)(?<!<))
     set: /T/b95dfcd
   - match: (?=\~)
@@ -2188,10 +2350,6 @@ contexts:
     scope: punctuation.section.arguments.end.faust
     pop: 2
   - include: fail!
-  arg-param-list/04fd23e@meta!:
-  - meta_scope: meta.function-call.arguments.faust
-  - match: ''
-    pop: 2
   arglist@meta!:
   - meta_scope: meta.function-call.arguments.faust
   - match: ''
@@ -2224,11 +2382,11 @@ contexts:
   - match: ''
     set: [/*-0/expression-1/f7f0973, pop2!, infixexp/a2c911a]
   /*-0/expression-1/f7f0973:
+  - match: (?=(:>|\+>))
+    pop: 2
   - match: (?=,)
     pop: 2
   - match: (?=:(?!>)(?<!<))
-    pop: 2
-  - match: (?=:>)
     pop: 2
   - match: (?=<:)
     pop: 2
@@ -2250,11 +2408,11 @@ contexts:
   /*-0/expression/5784718:
   - match: (?=\))
     pop: 2
+  - match: (?=(:>|\+>))
+    push: [pop2!, /alt-0//*-0/expression/5784718]
   - match: (?=,)
     push: [pop2!, /alt-0//*-0/expression/5784718]
   - match: (?=:(?!>)(?<!<))
-    push: [pop2!, /alt-0//*-0/expression/5784718]
-  - match: (?=:>)
     push: [pop2!, /alt-0//*-0/expression/5784718]
   - match: (?=<:)
     push: [pop2!, /alt-0//*-0/expression/5784718]
@@ -2267,8 +2425,8 @@ contexts:
   /alt-0//alt-0//*-0/expression/5784718:
   - match: (?=<:)
     set: /T/9a22c65
-  - match: (?=:>)
-    set: /T/b42b84b
+  - match: (?=(:>|\+>))
+    set: /T/b01ecb3
   - match: (?=:(?!>)(?<!<))
     set: /T/b95dfcd
   - match: (?=,)
@@ -2305,13 +2463,13 @@ contexts:
     pop: 2
   - match: (?=')
     pop: 2
+  - match: (?=(:>|\+>))
+    pop: 2
   - match: (?=,)
     pop: 2
   - match: (?=/)
     pop: 2
   - match: (?=:(?!>)(?<!<))
-    pop: 2
-  - match: (?=:>)
     pop: 2
   - match: (?=<)
     pop: 2
@@ -2344,6 +2502,8 @@ contexts:
   - match: (?=\-)
     pop: 2
   - match: (?=\.)
+    pop: 2
+  - match: (?=\[)
     pop: 2
   - match: (?=\^)
     pop: 2
@@ -2399,13 +2559,13 @@ contexts:
     pop: 2
   - match: (?=%)
     pop: 2
+  - match: (?=(:>|\+>))
+    pop: 2
   - match: (?=,)
     pop: 2
   - match: (?=/)
     pop: 2
   - match: (?=:(?!>)(?<!<))
-    pop: 2
-  - match: (?=:>)
     pop: 2
   - match: (?=<)
     pop: 2
@@ -2443,6 +2603,8 @@ contexts:
     push: [pop2!, /alt-0//*-0/infixexp-1/052aa16]
   - match: (?=\.)
     push: [pop2!, /alt-0//*-0/infixexp-1/052aa16]
+  - match: (?=\[)
+    push: [pop2!, /alt-0//*-0/infixexp-1/052aa16]
   - include: fail!
   /alt-0//*-0/infixexp-1/052aa16:
   - match: (?=')
@@ -2451,6 +2613,8 @@ contexts:
     set: [name-or-func-call/7ad33d6, pop2!, /T/7ba0cff]
   - match: (?=\()
     set: arglist@wrap_meta!
+  - match: (?=\[)
+    set: croc-deflist
   - include: fail!
   /*-0/infixexp/a2c911a:
   - match: (?=!=)
@@ -2465,11 +2629,11 @@ contexts:
     push: [pop2!, /alt-0//*-0/infixexp/a2c911a]
   - match: (?=>>)
     push: [pop2!, /alt-0//*-0/infixexp/a2c911a]
+  - match: (?=(:>|\+>))
+    pop: 2
   - match: (?=,)
     pop: 2
   - match: (?=:(?!>)(?<!<))
-    pop: 2
-  - match: (?=:>)
     pop: 2
   - match: (?=<:)
     pop: 2
@@ -2552,9 +2716,9 @@ contexts:
     pop: 2
   - match: (?=\))
     pop: 2
-  - match: (?=:(?!>)(?<!<))
+  - match: (?=(:>|\+>))
     push: [pop2!, /alt-0//*-0/argument/107a877]
-  - match: (?=:>)
+  - match: (?=:(?!>)(?<!<))
     push: [pop2!, /alt-0//*-0/argument/107a877]
   - match: (?=<:)
     push: [pop2!, /alt-0//*-0/argument/107a877]
@@ -2567,8 +2731,8 @@ contexts:
   /alt-0//alt-0//*-0/argument/107a877:
   - match: (?=<:)
     set: /T/9a22c65
-  - match: (?=:>)
-    set: /T/b42b84b
+  - match: (?=(:>|\+>))
+    set: /T/b01ecb3
   - match: (?=:(?!>)(?<!<))
     set: /T/b95dfcd
   - match: (?=\~)
@@ -2583,10 +2747,6 @@ contexts:
   /alt-0//*-0/arg-param-list/ada6e9a:
   - match: ''
     set: [argument/107a877, pop2!, /T/04cc951]
-  arg-param-list/ada6e9a@meta!:
-  - meta_scope: meta.function-call.arguments.faust
-  - match: ''
-    pop: 2
   paramlist@meta!:
   - meta_scope: meta.function.parameters.faust
   - match: ''
